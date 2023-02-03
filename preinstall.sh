@@ -76,4 +76,4 @@ EOD
 
 make_partitions
 make_luks
-change_scripts
+# change_scripts
