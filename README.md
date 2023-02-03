@@ -18,7 +18,7 @@ Open a terminal window and become root:
 
 Now run commands below: which download shell scripts and perform the pre-installation process.
 
-    git clone http://github.com/frgomes/kubuntu-btrfs-luks
+    git clone -b develop http://github.com/frgomes/kubuntu-btrfs-luks
     source ./kubuntu-btrfs-luks/preinstall.sh
     ubiquity --no-bootloader
 
