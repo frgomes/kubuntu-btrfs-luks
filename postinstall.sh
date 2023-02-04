@@ -5,7 +5,8 @@ read -s passphrase
 echo ""
 
 # Create a chroot environment and enter your system
-mount -o subvol=@,ssd,noatime,space_cache,commit=120,compress=zstd /dev/mapper/cryptdata /mnt
+#mount -o subvol=@,ssd,noatime,space_cache,commit=120,compress=zstd /dev/mapper/cryptdata /mnt
+mount -o subvol=@,ssd /dev/mapper/cryptdata /mnt
 for i in /dev /dev/pts /proc /sys /run; do sudo mount -B $i /mnt$i; done
 cp /etc/resolv.conf /mnt/etc/
 chroot /mnt
@@ -40,9 +41,9 @@ cat /etc/crypttab
 
 # Install the EFI bootloader
 echo "GRUB_ENABLE_CRYPTODISK=y" >> /etc/default/grub
-apt install -y --reinstall grub-efi-amd64-signed linux-generic linux-headers-generic linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04
+apt install -y --reinstall grub-efi-amd64-signed linux-generic linux-headers-generic linux-generic-hwe-22.04 linux-headers-generic-hwe-22.04
 update-initramfs -c -k all
-grub-install /dev/nve0n1
+grub-install /dev/nvem0n1
 update-grub
 stat -L -c "%A  %n" /boot/initrd.img
 lsinitramfs /boot/initrd.img | grep "^cryptroot/keyfiles/"
