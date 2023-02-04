@@ -1,5 +1,9 @@
 #!/bin/bash -eux
 
+echo -n "Enter passphrase for encrypted volume: "
+read -s passphrase
+echo ""
+
 # Create a chroot environment and enter your system
 mount -o subvol=@,ssd,noatime,space_cache,commit=120,compress=zstd /dev/mapper/cryptdata /mnt
 for i in /dev /dev/pts /proc /sys /run; do sudo mount -B $i /mnt$i; done
@@ -24,11 +28,11 @@ mkdir /etc/luks
 dd if=/dev/urandom of=/etc/luks/boot_os.keyfile bs=4096 count=1
 chmod u=rx,go-rwx /etc/luks
 chmod u=r,go-rwx /etc/luks/boot_os.keyfile
-cryptsetup luksAddKey /dev/nvme0n1p3 /etc/luks/boot_os.keyfile
+echo -n "${passphrase}" | cryptsetup luksAddKey /dev/nvme0n1p3 /etc/luks/boot_os.keyfile
 
 # Enter any existing passphrase:
 echo ENTER EXISTING PASSPHRASE
-cryptsetup luksDump /dev/nvme0n1p3 | grep "Key Slot"
+echo -n "${passphrase}" | cryptsetup luksDump /dev/nvme0n1p3 | grep "Key Slot"
 echo "KEYFILE_PATTERN=/etc/luks/*.keyfile" >> /etc/cryptsetup-initramfs/conf-hook
 echo "UMASK=0077" >> /etc/initramfs-tools/initramfs.conf
 sed -i "s|none|/etc/luks/boot_os.keyfile|" /etc/crypttab # this replaces none with /etc/luks/boot_os.keyfile
