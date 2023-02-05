@@ -254,10 +254,10 @@ function enable_services() {
 function umount_and_reboot() {
   snapper create --type single --description "Installation completed successfully" --userdata "important=yes"
   sync; sync; sync
+  umount -a
   echo "[ Installation completed successfully ]"
   echo "Please remove the installation media and press ENTER"
   read -s dummy
-  umount -a
   reboot
 }
 
