@@ -113,12 +113,14 @@ function grub_enable_cryptodisk() {
 
 function create_volume_unlock_keys() {
   local partition=/dev/nvme0n1p
+  local passphrase="$(cat /dev/shm/luks_passphrase)"
   dd bs=1 count=512 if=/dev/urandom of=/boot/volume-root.key
   dd bs=1 count=512 if=/dev/urandom of=/boot/volume-swap.key
-  cryptsetup luksAddKey ${partition}2 /boot/volume-swap.key
-  cryptsetup luksAddKey ${partition}4 /boot/volume-root.key
+  echo "${passphrase} | "cryptsetup luksAddKey ${partition}2 /boot/volume-swap.key -
+  echo "${passphrase} | "cryptsetup luksAddKey ${partition}4 /boot/volume-root.key -
+  cat /boot/volume-swap.key | base64 -d
+  cat /boot/volume-root.key | base64 -d
 }
-
 
 
 function automated_install() {
@@ -131,11 +133,3 @@ function automated_install() {
   install_grub
   grub_enable_cryptodisk
 }
-
-
-function test_automated_install() {
-  local passphrase="$1"
-  echo ${passphrase}
-}
-
-test_automated_install "$@"
