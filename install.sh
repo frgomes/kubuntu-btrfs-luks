@@ -3,11 +3,12 @@
 function install_locales() {
   apt update
   apt install -y locales
-  dpkg-reconfigure locales
+  ##FIXME: do we really need to setup locales at this point?
+  #dpkg-reconfigure locales
 }
 
 function install_btrfs_progs() {
-  apt install -y btrfs-progs crypsetup
+  apt install -y btrfs-progs cryptsetup
 }
 
 function install_kernel() {
