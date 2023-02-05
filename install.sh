@@ -21,9 +21,6 @@ function setup_passwd_user() {
     read fullname
   done
 
-  echo -n "Enter full name for first user: "
-  read fullname
-
   local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' | sed -E 's/[ \t]+//g')
   local confirm=
   while [ -z "${username}" -o \( "${username}" != "${confirm}" \) ] ;do
