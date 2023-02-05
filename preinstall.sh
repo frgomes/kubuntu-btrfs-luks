@@ -101,7 +101,7 @@ function setup_chroot() {
   # copy scripts
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   mkdir -p /mnt/tmp/chroot
-  cp -pv ${dir}/*.sh /mnt/tmp/chroot
+  cp -rpv ${dir} /mnt/tmp/chroot
 }
 
 function automated_install() {
