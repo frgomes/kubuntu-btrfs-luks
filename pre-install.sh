@@ -129,6 +129,8 @@ deb-src http://deb.debian.org/debian ${character}-updates main contrib non-free
 # deb     http://deb.debian.org/debian/ unstable main
 # deb-src http://deb.debian.org/debian/ unstable main
 EOD
+  # debugging
+  cat /mnt/etc/sources.list
 }
 
 function setup_chroot() {
@@ -139,6 +141,8 @@ function setup_chroot() {
   # copy scripts
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   mkdir -p /mnt/tmp
+
+  echo cp -pv ${dir} /mnt/tmp
   cp -pv ${dir} /mnt/tmp
   # debugging
   ls -al /mnt/tmp/chroot
