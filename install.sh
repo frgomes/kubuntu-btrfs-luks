@@ -3,7 +3,7 @@
 function install_locales() {
   apt update
   apt install -y locales
-  apt-reconfigure locales
+  dpkg-reconfigure locales
 }
 
 function install_btrfs_progs() {

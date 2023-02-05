@@ -115,7 +115,7 @@ function automated_install() {
   install_debian
   update_sources
   setup_chroot
-
+  # run next step in a jail
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   local base=$(dirname ${dir})
   chroot /mnt /tmp/${base}/install.sh
