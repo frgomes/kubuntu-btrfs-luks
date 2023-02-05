@@ -3,6 +3,7 @@
 function install_locales() {
   local layout=gb
   local lang=en_GB
+  # define default keyboard configuration
   cat <<EOD > /mnt/etc/default/keyboard
 # KEYBOARD CONFIGURATION FILE
 # Consult the keyboard(5) and xkeyboard-config(7) manual page.
@@ -14,6 +15,7 @@ XKBOPTIONS="grp:alt_shift_toggle"
 BACKSPACE="guess"
 EOD
 
+  # define default locale configuration
   apt update
   apt install -y locales
   update-locale "LANG=${lang}.UTF-8"
@@ -28,7 +30,7 @@ function install_btrfs_progs() {
 function install_kernel() {
   ##FIXME: should detect hardware architecture
   local firmware=$(apt search firmware | grep -E "^firmware-" | cut -d/ -f1 | fgrep -v microbit)
-  apt install -y linux-image-amd64 intel-microcode amd64-microcode 
+  apt install -y linux-image-amd64 intel-microcode amd64-microcode
 }
 
 function setup_root() {
@@ -37,8 +39,10 @@ function setup_root() {
   while [ "${password}" != "${confirm}" ] ;do
     echo -n "Enter password for root: "
     read -s password
+    echo ""
     echo -n "Confirm password for root: "
     read -s confirm
+    echo ""
   done
   echo "${password}" | passwd root --stdin
 }
@@ -57,8 +61,10 @@ function setup_user() {
   while [ "${password}" != "${confirm}" ] ;do
     echo -n "Enter password for ${username}: "
     read -s password
+    echo ""
     echo -n "Confirm password for ${username}: "
     read -s confirm
+    echo ""
   done
   echo "${password}" | passwd ${username} --stdin
 }

@@ -13,8 +13,17 @@ function make_partitions() {
 
 function make_luks() {
   local device=/dev/nvme0n1
-  echo -n "Enter passphrase for encrypted volume: "
-  read -s passphrase
+
+  local passphrase=passphrase
+  local confirm=wrong
+  while [ "${passphrase}" != "${confirm}" ] ;do
+    echo -n "Enter passphrase for encrypted volume: "
+    read -s password
+    echo ""
+    echo -n "Confirm passphrase for encrypted volume: "
+    read -s confirm
+    echo ""
+  done
   # swap
   echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${device}p2 -
   echo -n "${passphrase}" | cryptsetup luksOpen ${device}p2 cryptswap -
