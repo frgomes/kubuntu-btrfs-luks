@@ -15,15 +15,10 @@ function setup_passwd_root() {
 }
 
 function setup_passwd_user() {
-  local fullname="Debian"
-  local confirm=
-  while [ -z "${fullname}" -o \( "${fullname}" != "${confirm}" \) ] ;do
+  local fullname=""
+  while [ -z "${fullname}" ] ;do
     echo -n "Enter full name for first user: "
-    read -s username
-    echo ""
-    echo -n "Confirm username for first user: "
-    read -s confirm
-    echo ""
+    read username
   done
 
   echo -n "Enter full name for first user: "
