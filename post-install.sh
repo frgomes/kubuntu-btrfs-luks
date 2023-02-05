@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-function setup_passwd_root() {
+function setup_password_root() {
   echo "[ setup_passwd_root ]"
   local password=password
   local confirm=
@@ -16,7 +16,7 @@ function setup_passwd_root() {
   ssh-keygen -b 4096 -t ed25519 -a 5 -f ~root/.ssh/id_ed25519 -N"${password}"
 }
 
-function setup_passwd_user() {
+function setup_password_user() {
   echo "[ setup_passwd_user ]"
   local fullname=""
   while [ -z "${fullname}" ] ;do
