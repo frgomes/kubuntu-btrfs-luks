@@ -8,7 +8,7 @@ mklabel gpt
 mkpart primary 1MiB 513MiB
 mkpart primary 513MiB 16897MiB
 mkpart primary 16897MiB MiB 18495MiB
-mkpart primary 18495MiB 100%
+mkpart primary 18495MiB -1s
 print
 quit
 EOD
