@@ -196,9 +196,9 @@ function install_mozilla_suite() {
 function install_office_suite() {
   apt update
   ##FIXME: handle retries
-  apt install -y libreoffice
-  apt install -y libreoffice
-  apt install -y libreoffice
+  apt install -y libreoffice gimp okular skanlite cups printer-driver-cups-pdf system-config-printer
+  apt install -y libreoffice gimp okular skanlite cups printer-driver-cups-pdf system-config-printer
+  apt install -y libreoffice gimp okular skanlite cups printer-driver-cups-pdf system-config-printer
 }
 
 function install_timeshift() {
@@ -227,6 +227,8 @@ function install_utilities() {
   apt install -y git gitk hg tortoisehg
   # password mamagers
   apt install -y keepass-xc
+  # package managers
+  apt install -y flatpak
 }
 
 function enable_services() {
