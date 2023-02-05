@@ -157,7 +157,7 @@ function automated_install() {
   make_partitions "${passphrase}"
   define_luks_passphrase
   make_luks
-  format_filesystems
+  make_filesystems
   make_volumes
   mount_volumes
   install_debian
