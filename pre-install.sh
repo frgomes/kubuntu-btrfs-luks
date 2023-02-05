@@ -179,7 +179,7 @@ function automated_install() {
   # run next step in a jail
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   local base=$(dirname ${dir})
-  chroot /mnt /tmp/${base}/post-install.sh
+  echo chroot /mnt /tmp/${base}/post-install.sh
   echo -n "PRESS ENTER"; read -s dummy
   # umount_and_reboot
 }
