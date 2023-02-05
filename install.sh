@@ -11,7 +11,7 @@ function setup_passwd_root() {
     read -s confirm
     echo ""
   done
-  echo -e "${password}\n${password}" | passwd --quiet root > /dev/null
+  echo -e "${password}\n${password}" | passwd --quiet root
 }
 
 function setup_passwd_user() {
@@ -85,7 +85,7 @@ function create_fstab() {
   cat /proc/mounts | grep -E "^/dev/mapper/|^tmpfs|^${device}" | \
     sed -E "s|^/dev/mapper/cryptroot|${uuid_root}|" | \
     sed -E "s|^tmpfs|${uuid_root}|" | \
-    sed -E "s|${device}p1|${uuid_efi}|"
+    sed -E "s|${device}p1|${uuid_efi}|" > /etc/fstab
 }
 
 
