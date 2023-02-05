@@ -175,19 +175,25 @@ function install_desktops() {
   ##FIXME: desktop
   local desktop=kde-plasma-desktop
   apt update
+  ##FIXME: handle retries
   apt install -y ${desktop}
+  apt install -y ${desktop}
+  apt install -y ${desktop}
+}
+
+function install_mozilla_suite() {
+  apt update
+  apt install -y firefox-esr thunderbird
+}
+
+function install_office_suite() {
+  apt update
+  apt install -y libreoffice
 }
 
 function install_timeshift() {
   apt update
   apt install -y timeshift snapper-gui
-}
-
-function enable_services() {
-  # openssh-server
-  apt update
-  apt install -y openssh-server fail2ban
-  systemctl enable enable sshd
 }
 
 function install_utilities() {
@@ -198,6 +204,13 @@ function install_utilities() {
   apt install -y zile emacs vim
   # source code management
   apt install -y git hg
+}
+
+function enable_services() {
+  # openssh-server
+  apt update
+  apt install -y openssh-server fail2ban
+  systemctl enable enable sshd
 }
 
 function umount_and_reboot() {
@@ -224,7 +237,9 @@ function automated_install() {
   configure_initramfs_tools
   configure_networking
   install_desktops
-  enable_services
+  install_mozilla_suite
+  install_office_suite
   install_utilities
+  enable_services
   umount_and_reboot
 }
