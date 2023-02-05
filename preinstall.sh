@@ -22,26 +22,18 @@ function define_luks_passphrase() {
     read -s confirm
     echo ""
   done
-  echo ${passphrase}
+  ##FIXME: THIS IS A SECURITY RISK!!!!
+  ##FIXME: we should share the passphrase via shared memory instead.
+  echo -n "${passphrase}" > /dev/shm/luks_passphrase
 }
-
-
-
-
-
 
 function test_make_luks() {
-  local passphrase=${1:-$(dd bs=1 count=32 if=/dev/urandom | base64)}
-  echo TEST_MAKE_LUKS ${passphrase}
+  echo TEST MAKE LUKS
+  cat /dev/shm/luks_passphrase
 }
 
-
-
-
-
-
 function make_luks() {
-  local passphrase=${1:-$(dd bs=1 count=32 if=/dev/urandom | base64)}
+
   local partition=/dev/nvme0n1p
   # swap
   echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}2 -
@@ -152,6 +144,6 @@ function automated_preinstall() {
 
 
 function test() {
-  local passphrase="$(define_luks_passphrase)"
-  test_make_luks "${passphrase}"
+  define_luks_passphrase
+  test_make_luks
 }
