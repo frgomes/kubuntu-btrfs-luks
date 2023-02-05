@@ -277,22 +277,44 @@ function finish_installation() {
 
 function automated_chroot() {
   setup_password_root
+  echo -n "PRESS ENTER"; read -s dummy
   setup_password_user
+  echo -n "PRESS ENTER"; read -s dummy
   install_locales
+  echo -n "PRESS ENTER"; read -s dummy
   install_btrfs_progs
+  echo -n "PRESS ENTER"; read -s dummy
   install_kernel
+  echo -n "PRESS ENTER"; read -s dummy
   create_fstab
+  echo -n "PRESS ENTER"; read -s dummy
   install_grub
+  echo -n "PRESS ENTER"; read -s dummy
   grub_enable_cryptodisk
+  echo -n "PRESS ENTER"; read -s dummy
   configure_crypttab
+  echo -n "PRESS ENTER"; read -s dummy
   configure_initramfs
+  echo -n "PRESS ENTER"; read -s dummy
   configure_initramfs_tools
+  echo -n "PRESS ENTER"; read -s dummy
   configure_networking
+  echo -n "PRESS ENTER"; read -s dummy
   install_desktops
+  echo -n "PRESS ENTER"; read -s dummy
   install_mozilla_suite
+  echo -n "PRESS ENTER"; read -s dummy
   install_office_suite
+  echo -n "PRESS ENTER"; read -s dummy
   install_printer_and_scanner
+  echo -n "PRESS ENTER"; read -s dummy
   install_utilities
+  echo -n "PRESS ENTER"; read -s dummy
   enable_services
+  echo -n "PRESS ENTER"; read -s dummy
   finish_installation
+  echo -n "PRESS ENTER"; read -s dummy
 }
+
+
+automated_chroot

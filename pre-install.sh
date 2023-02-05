@@ -8,6 +8,7 @@
 # timezone
 # hostname
 # domain
+# network mirror
 # root passwd
 # fullname
 # username
@@ -155,17 +156,29 @@ function umount_and_reboot() {
 
 function automated_install() {
   make_partitions "${passphrase}"
+  echo -n "PRESS ENTER"; read -s dummy
   define_luks_passphrase
+  echo -n "PRESS ENTER"; read -s dummy
   make_luks
+  echo -n "PRESS ENTER"; read -s dummy
   make_filesystems
+  echo -n "PRESS ENTER"; read -s dummy
   make_volumes
+  echo -n "PRESS ENTER"; read -s dummy
   mount_volumes
+  echo -n "PRESS ENTER"; read -s dummy
   install_debian
+  echo -n "PRESS ENTER"; read -s dummy
   update_sources
+  echo -n "PRESS ENTER"; read -s dummy
   setup_chroot
   # run next step in a jail
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   local base=$(dirname ${dir})
   chroot /mnt /tmp/${base}/post-install.sh
-  umount_and_reboot
+  echo -n "PRESS ENTER"; read -s dummy
+  # umount_and_reboot
 }
+
+
+automated_install
