@@ -149,10 +149,7 @@ function setup_chroot() {
 }
 
 function perform_installation() {
-  # run next step in a jail
-  local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
-  local base=$(dirname ${dir})
-  echo chroot /mnt /tmp/${base}/post-install.sh
+  echo chroot /mnt /tmp/chroot/post-install.sh
 }
 
 function umount_and_reboot() {
