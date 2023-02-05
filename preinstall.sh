@@ -27,14 +27,17 @@ function make_luks() {
   # root (btrfs)
   echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${device}p4 -
   echo -n "${passphrase}" | cryptsetup luksOpen ${device}p4 cryptroot -
+  # debugging
+  lsblk
 }
 
 function make_filesystems() {
-  lsblk
   # swap
   mkswap /dev/mapper/cryptswap
   # root (btrfs)
   mkfs.btrfs /dev/mapper/cryptroot
+  # debugging
+  lsblk
 }
 
 function make_volumes() {
