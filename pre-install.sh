@@ -465,11 +465,12 @@ function automated_install() {
 #  echo -n "PRESS ENTER"; read -s dummy
 
 
-setup_chroot
-echo -n "PRESS ENTER"; read -s dummy
+  setup_chroot
+  echo -n "PRESS ENTER"; read -s dummy
 
-chroot /mnt /tmp/chroot/setup_password_root.sh
-echo -n "PRESS ENTER"; read -s dummy
+ #chroot /mnt ./chroot_setup_password_root.sh
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
 
 
 
