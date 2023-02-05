@@ -7,7 +7,7 @@ function make_partitions() {
   parted -s ${device} -- mkpart primary 1MiB 513MiB
   parted -s ${device} -- mkpart primary 513MiB 16897MiB
   parted -s ${device} -- mkpart primary 16897MiB 18495MiB
-  parted -s ${device} -- mkpart primary 18495MiB -1s
+  parted -s ${device} -- mkpart primary 18495MiB -64KiB
   parted -s ${device} -- print
 }
 
