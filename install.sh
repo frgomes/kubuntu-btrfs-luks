@@ -141,9 +141,15 @@ function configure_initramfs() {
 
 function configure_initramfs_tools() {
   echo "[ update /etc/initramfs-tools/initramfs.conf ]"
-  fgrep 'UMASK=0077' /etc/initramfs-tools/initramfs.conf > /dev/null || echo "UMASK=0077" > /etc/initramfs-tools/initramfs.conf
+  cat <<EOD
+UMASK=0077
+COMPRESS=gzip
+EOD
   cat /etc/initramfs-tools/initramfs.conf
   update-initramfs -u
+  # debugging
+  stat -Lc "%A %n" /initrd.img
+  lsinitramfs /initrd.img | grep -E "^crypt"
 }
 
 
