@@ -67,7 +67,7 @@ EOD
 }
 
 function install_btrfs_progs() {
-  apt install -y btrfs-progs cryptsetup
+  apt install -y btrfs-progs cryptsetup zstd
 }
 
 function install_kernel() {
