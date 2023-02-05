@@ -101,7 +101,5 @@ function automated_install() {
   install_locales
   install_btrfs_progs
   install_kernel
-  setup_root
-  setup_user
   create_fstab
 }
