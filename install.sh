@@ -203,14 +203,17 @@ function install_utilities() {
   # text editors
   apt install -y zile emacs vim
   # source code management
-  apt install -y git hg
+  apt install -y git gitk hg tortoisehg
+  # file replication and synchronization
+  apt install -y syncthing syncthing-discosrv syncthing-relaysrv syncthing-gtk
+
 }
 
 function enable_services() {
   # openssh-server
   apt update
   apt install -y openssh-server fail2ban
-  systemctl enable enable sshd
+  systemctl enable sshd
 }
 
 function umount_and_reboot() {
