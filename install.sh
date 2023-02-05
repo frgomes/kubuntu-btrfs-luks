@@ -187,6 +187,12 @@ function install_utilities() {
   apt install -y wget curl zile vim git hg
 }
 
+function umount_and_reboot() {
+  umount -a
+  reboot
+}
+
+
 function automated_install() {
   setup_password_root
   setup_password_user
@@ -199,8 +205,9 @@ function automated_install() {
   configure_crypttab
   configure_initramfs
   configure_initramfs_tools
-  configure-networking
+  configure_networking
   install_desktops
   enable_services
   install_utilities
+  umount_and_reboot
 }
