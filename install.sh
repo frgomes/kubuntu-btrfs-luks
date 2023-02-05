@@ -183,17 +183,34 @@ function install_desktops() {
 
 function install_mozilla_suite() {
   apt update
+  ##FIXME: handle retries
+  apt install -y firefox-esr thunderbird
+  apt install -y firefox-esr thunderbird
   apt install -y firefox-esr thunderbird
 }
 
 function install_office_suite() {
   apt update
+  ##FIXME: handle retries
+  apt install -y libreoffice
+  apt install -y libreoffice
   apt install -y libreoffice
 }
 
 function install_timeshift() {
   apt update
+  ##FIXME: handle retries
   apt install -y timeshift snapper-gui
+  apt install -y timeshift snapper-gui
+  apt install -y timeshift snapper-gui
+}
+
+function install_syncthing() {
+  apt update
+  ##FIXME: handle retries
+  apt install -y syncthing syncthing-discosrv syncthing-relaysrv syncthing-gtk
+  apt install -y syncthing syncthing-discosrv syncthing-relaysrv syncthing-gtk
+  apt install -y syncthing syncthing-discosrv syncthing-relaysrv syncthing-gtk
 }
 
 function install_utilities() {
@@ -204,14 +221,16 @@ function install_utilities() {
   apt install -y zile emacs vim
   # source code management
   apt install -y git gitk hg tortoisehg
-  # file replication and synchronization
-  apt install -y syncthing syncthing-discosrv syncthing-relaysrv syncthing-gtk
-
+  # password mamagers
+  apt install -y keepass-xc
 }
 
 function enable_services() {
   # openssh-server
   apt update
+  ##FIXME: handle retries
+  apt install -y openssh-server fail2ban
+  apt install -y openssh-server fail2ban
   apt install -y openssh-server fail2ban
   systemctl enable sshd
 }
