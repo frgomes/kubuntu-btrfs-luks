@@ -69,7 +69,11 @@ EOD
 }
 
 function install_btrfs_progs() {
-  apt install -y btrfs-progs cryptsetup
+  apt update
+  ##FIXME: handle retries
+  apt install -y btrfs-progs cryptsetup snapper
+  apt install -y btrfs-progs cryptsetup snapper
+  apt install -y btrfs-progs cryptsetup snapper
 }
 
 function install_kernel() {
@@ -236,6 +240,7 @@ function enable_services() {
 }
 
 function umount_and_reboot() {
+  snapper create --type single --description "Installation completed successfully" --userdata "important=yes"
   sync; sync; sync
   echo "[ Installation completed successfully ]"
   echo "Please remove the installation media and press ENTER"
