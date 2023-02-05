@@ -11,7 +11,7 @@ function setup_passwd_root() {
     read -s confirm
     echo ""
   done
-  echo -e "${password}\n${password}" | passwd root
+  echo -e "${password}\n${password}" | passwd --quiet root
 }
 
 function setup_passwd_user() {
@@ -23,7 +23,7 @@ function setup_passwd_user() {
 
   local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' | sed -E 's/[ \t]+//g')
   while
-    echo -n "Enter username for user ${fullname}  (${username}): "
+    echo -n "Enter username for user ${fullname}: "
     read -i "${username}" username
     [[ -z "${username}" ]]
   do true ;done
@@ -40,7 +40,7 @@ function setup_passwd_user() {
   done
 
   useradd -m "${username}"
-  echo -e "${password}\n${password}" | passwd ${username}
+  echo -e "${password}\n${password}" | passwd --quiet ${username}
 }
 
 function install_locales() {
