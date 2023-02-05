@@ -1,5 +1,41 @@
 #!/bin/bash -eux
 
+function setup_passwd_root() {
+  local password=password
+  local confirm=wrong
+  while [ "${password}" != "${confirm}" ] ;do
+    echo -n "Enter password for root: "
+    read -s password
+    echo ""
+    echo -n "Confirm password for root: "
+    read -s confirm
+    echo ""
+  done
+  echo -e "${password}\n${passwork}" | passwd root
+}
+
+function setup_passwd_user() {
+  local fullname="Debian"
+  echo -n "Enter full name of first user: "
+  read fullname
+
+  local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]')
+  echo -n "Enter username of first user: "
+  read username
+
+  local password=password
+  local confirm=wrong
+  while [ "${password}" != "${confirm}" ] ;do
+    echo -n "Enter password for ${username}: "
+    read -s password
+    echo ""
+    echo -n "Confirm password for ${username}: "
+    read -s confirm
+    echo ""
+  done
+  echo -e "${password}\n${passwork}" | passwd ${username}
+}
+
 function install_locales() {
   local layout=gb
   local lang=en_GB
@@ -33,42 +69,6 @@ function install_kernel() {
   apt install -y linux-image-amd64 intel-microcode amd64-microcode
 }
 
-function setup_root() {
-  local password=password
-  local confirm=wrong
-  while [ "${password}" != "${confirm}" ] ;do
-    echo -n "Enter password for root: "
-    read -s password
-    echo ""
-    echo -n "Confirm password for root: "
-    read -s confirm
-    echo ""
-  done
-  echo "${password}" | passwd --stdin root
-}
-
-function setup_user() {
-  local fullname="Debian"
-  echo -n "Enter full name of first user: "
-  read fullname
-
-  local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]')
-  echo -n "Enter username of first user: "
-  read username
-
-  local password=password
-  local confirm=wrong
-  while [ "${password}" != "${confirm}" ] ;do
-    echo -n "Enter password for ${username}: "
-    read -s password
-    echo ""
-    echo -n "Confirm password for ${username}: "
-    read -s confirm
-    echo ""
-  done
-  echo "${password}" | passwd --stdin ${username}
-}
-
 function create_fstab() {
   local device=/dev/nvme0n1
   local uuid_efi=$(blkid | fgrep ${device}p1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
@@ -83,6 +83,8 @@ function create_fstab() {
 
 
 function automated_install() {
+  setup_password_root
+  setup_password_user
   install_locales
   install_btrfs_progs
   install_kernel
