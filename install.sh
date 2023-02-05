@@ -44,7 +44,7 @@ function setup_root() {
     read -s confirm
     echo ""
   done
-  echo "${password}" | passwd root --stdin
+  echo "${password}" | passwd --stdin root
 }
 
 function setup_user() {
@@ -66,7 +66,7 @@ function setup_user() {
     read -s confirm
     echo ""
   done
-  echo "${password}" | passwd ${username} --stdin
+  echo "${password}" | passwd --stdin ${username}
 }
 
 function create_fstab() {
