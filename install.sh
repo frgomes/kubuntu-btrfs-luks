@@ -226,7 +226,7 @@ function install_utilities() {
   # source code management
   apt install -y git gitk hg tortoisehg
   # password mamagers
-  apt install -y keepass-xc
+  apt install -y keepassxc
   # package managers
   apt install -y flatpak
 }
