@@ -1,5 +1,7 @@
 #!/bin/bash -eux
 
+rehash -h
+
 function setup_password_root() {
   echo "[ setup_passwd_root ]"
   local password=password
@@ -275,7 +277,7 @@ function finish_installation() {
 }
 
 
-function automated_chroot() {
+#function automated_chroot() {
   setup_password_root
   echo -n "PRESS ENTER"; read -s dummy
   setup_password_user
@@ -314,7 +316,7 @@ function automated_chroot() {
   echo -n "PRESS ENTER"; read -s dummy
   finish_installation
   echo -n "PRESS ENTER"; read -s dummy
-}
+#}
 
 
-automated_chroot
+#automated_chroot
