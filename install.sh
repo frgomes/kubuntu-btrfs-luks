@@ -106,7 +106,7 @@ function grub_enable_cryptodisk() {
   sed 's/GRUB_ENABLE_CRYPTODISK=no/GRUB_ENABLE_CRYPTODISK=yes/' -i /etc/default/grub
   local luks_config=$(blkid | fgrep 'TYPE="crypto_LUKS"' | cut -d' ' -f2 | cut -d= -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]' | sed -E 's/^/,rd.luks.uuid=/' | tr -d '\n')
   echo ${luks_config}
-  sed "s/quiet/quiet${luks_config}" /etc/default/grub
+  sed "s/quiet/quiet${luks_config}/" /etc/default/grub
   # debugging
   #cat /etc/default/grub
 }
