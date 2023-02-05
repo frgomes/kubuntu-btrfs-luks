@@ -155,7 +155,7 @@ function create_fstab() {
   cat /proc/mounts | grep -E "^/dev/mapper/|^tmpfs|^${device}" | \
     sed -E "s|^/dev/mapper/cryptroot|${uuid_root}|" | \
     sed -E "s|^tmpfs|${uuid_root}|" | \
-    sed -E "s|${device}p1|${uuid_efi}"
+    sed -E "s|${device}p1|${uuid_efi}|"
 }
 
 
