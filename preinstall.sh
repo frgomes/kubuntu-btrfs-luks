@@ -1,18 +1,18 @@
 #!/bin/bash -eux
 
 function make_partitions() {
-  local device=/dev/nvme0n1
+  local drive=/dev/nvme0n1
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
-  parted -s ${device} -- mklabel gpt
-  parted -s ${device} -- mkpart primary 1MiB 513MiB
-  parted -s ${device} -- mkpart primary 513MiB 16897MiB
-  parted -s ${device} -- mkpart primary 16897MiB 18495MiB
-  parted -s ${device} -- mkpart primary 18495MiB -64KiB
-  parted -s ${device} -- print
+  parted -s ${drive} -- mklabel gpt
+  parted -s ${drive} -- mkpart primary 1MiB 513MiB
+  parted -s ${drive} -- mkpart primary 513MiB 16897MiB
+  parted -s ${drive} -- mkpart primary 16897MiB 18495MiB
+  parted -s ${drive} -- mkpart primary 18495MiB -64KiB
+  parted -s ${drive} -- print
 }
 
 function make_luks() {
-  local device=/dev/nvme0n1
+  local partition=/dev/nvme0n1p
 
   local passphrase=passphrase
   local confirm=wrong
@@ -25,19 +25,19 @@ function make_luks() {
     echo ""
   done
   # swap
-  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${device}p2 -
-  echo -n "${passphrase}" | cryptsetup luksOpen ${device}p2 cryptswap -
+  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}2 -
+  echo -n "${passphrase}" | cryptsetup luksOpen ${partition}2 cryptswap -
   # root (btrfs)
-  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${device}p4 -
-  echo -n "${passphrase}" | cryptsetup luksOpen ${device}p4 cryptroot -
+  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}4 -
+  echo -n "${passphrase}" | cryptsetup luksOpen ${partition}4 cryptroot -
   # debugging
   lsblk
 }
 
 function make_filesystems() {
-  local device=/dev/nvme0n1
+  local partition=/dev/nvme0n1p
   # efi
-  mkfs.vfat ${device}p1
+  mkfs.vfat ${partition}1
   # swap
   mkswap /dev/mapper/cryptswap
   # root (btrfs)
@@ -56,7 +56,7 @@ function make_volumes() {
 }
 
 function mount_volumes() {
-  local device=/dev/nvme0n1
+  local partition=/dev/nvme0n1p
   local options=,ssd,noatime,compress=zstd,space_cache=v2,commit=120
   # root (btrfs)
   mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
@@ -65,7 +65,7 @@ function mount_volumes() {
   mount -t btrfs -o ${options},subvol=@snapshots /dev/mapper/cryptroot /mnt/.snapshots
   # efi
   mkdir -p /mnt/boot/efi
-  mount ${device}p1 /mnt/boot/efi
+  mount ${partition}1 /mnt/boot/efi
   # swap
   swapon /dev/mapper/cryptswap
 }

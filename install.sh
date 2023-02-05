@@ -78,19 +78,19 @@ function install_kernel() {
 }
 
 function create_fstab() {
-  local device=/dev/nvme0n1
-  local uuid_efi=$(blkid | fgrep ${device}p1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
-  local uuid_swap=$(blkid | fgrep ${device}p2 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
-  local uuid_boot=$(blkid | fgrep ${device}p3 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
-  local uuid_root=$(blkid | fgrep ${device}p4 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
-  cat /proc/mounts | grep -E "^/dev/mapper/|^tmpfs|^${device}" | \
+  local partition=/dev/nvme0n1p
+  local uuid_efi=$(blkid | fgrep ${partition}1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  local uuid_swap=$(blkid | fgrep ${partition}2 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  local uuid_boot=$(blkid | fgrep ${partition}3 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  local uuid_root=$(blkid | fgrep ${partition}4 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  cat /proc/mounts | grep -E "^/dev/mapper/|^tmpfs|^${partition}" | \
     sed -E "s|^/dev/mapper/cryptroot|${uuid_root}|" | \
     sed -E "s|^tmpfs|${uuid_root}|" | \
     sed -E "s|/ btrfs|/           btrfs|" | \
     sed -E "s|/home btrfs|/home       btrfs|" | \
     sed -E "s|/@ 0 0|/           0 0|" | \
     sed -E "s|/@home 0 0|/home       0 0|" | \
-    sed -E "s|${device}p1|${uuid_efi}|" > /etc/fstab
+    sed -E "s|${partition}1|${uuid_efi}|" > /etc/fstab
   # debugging
   cat /etc/fstab
 }
@@ -106,10 +106,19 @@ function grub_enable_cryptodisk() {
   sed 's/GRUB_ENABLE_CRYPTODISK=no/GRUB_ENABLE_CRYPTODISK=yes/' -i /etc/default/grub
   local luks_config=$(blkid | fgrep 'TYPE="crypto_LUKS"' | cut -d' ' -f2 | cut -d= -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]' | sed -E 's/^/,rd.luks.uuid=/' | tr -d '\n')
   echo ${luks_config}
-  sed "s/quiet/quiet${luks_config}/" /etc/default/grub
+  sed "s/quiet/quiet${luks_config}/" -i /etc/default/grub
   # debugging
-  #cat /etc/default/grub
+  cat /etc/default/grub
 }
+
+function create_volume_unlock_keys() {
+  local partition=/dev/nvme0n1p
+  dd bs=1 count=512 if=/dev/urandom of=/boot/volume-root.key
+  dd bs=1 count=512 if=/dev/urandom of=/boot/volume-swap.key
+  cryptsetup luksAddKey ${partition}2 /boot/volume-swap.key
+  cryptsetup luksAddKey ${partition}4 /boot/volume-root.key
+}
+
 
 
 function automated_install() {
@@ -122,3 +131,6 @@ function automated_install() {
   install_grub
   grub_enable_cryptodisk
 }
+
+
+echo "XXXXXXXXXXXXXXXXXXXXXX $@"
