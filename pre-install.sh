@@ -130,7 +130,7 @@ deb-src http://deb.debian.org/debian ${character}-updates main contrib non-free
 # deb-src http://deb.debian.org/debian/ unstable main
 EOD
   # debugging
-  cat /mnt/etc/sources.list
+  cat /mnt/etc/apt/sources.list
 }
 
 function setup_chroot() {
