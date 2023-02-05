@@ -101,6 +101,11 @@ function install_grub() {
   apt install -y grub-efi-${hwarch}
 }
 
+function grup_enable_cryptodisk() {
+  fgrep 'GRUB_ENABLE_CRYPTODISK=yes' /etc/default/grub || sed '/GRUB_CMDLINE_LINUX_DEFAULT/i GRUB_ENABLE_CRYPTODISK=yes' -i /etc/default/grub
+  sed 's/GRUB_ENABLE_CRYPTODISK=no/GRUB_ENABLE_CRYPTODISK=yes/' -i /etc/default/grub
+}
+
 
 function automated_install() {
   setup_password_root
@@ -110,4 +115,5 @@ function automated_install() {
   install_kernel
   create_fstab
   install_grub
+  grup_enable_cryptodisk
 }
