@@ -11,12 +11,6 @@ function make_partitions() {
   parted -s ${device} -- print
 }
 
-function format_efi() {
-  local device=/dev/nvme0n1
-  # efi
-  mkfs.vfat ${device}p1
-}
-
 function make_luks() {
   local device=/dev/nvme0n1
   echo -n "Enter passphrase for encrypted volume: "
@@ -32,6 +26,9 @@ function make_luks() {
 }
 
 function make_filesystems() {
+  local device=/dev/nvme0n1
+  # efi
+  mkfs.vfat ${device}p1
   # swap
   mkswap /dev/mapper/cryptswap
   # root (btrfs)
