@@ -72,8 +72,9 @@ function install_btrfs_progs() {
 
 function install_kernel() {
   ##FIXME: should detect hardware architecture
+  local hwarch=amd64
   local firmware=$(apt search firmware | grep -E "^firmware-" | cut -d/ -f1 | fgrep -v microbit)
-  apt install -y linux-image-amd64 intel-microcode amd64-microcode
+  apt install -y linux-image-${hwarch} intel-microcode ${hwarch}-microcode
 }
 
 function create_fstab() {
@@ -94,6 +95,12 @@ function create_fstab() {
   cat /etc/fstab
 }
 
+function install_grub() {
+  ##FIXME: should detect hardware architecture
+  local hwarch=amd64
+  apt install -y grub-efi-${hwarch}
+}
+
 
 function automated_install() {
   setup_password_root
@@ -102,4 +109,5 @@ function automated_install() {
   install_btrfs_progs
   install_kernel
   create_fstab
+  install_grub
 }
