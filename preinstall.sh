@@ -1,5 +1,19 @@
 #!/bin/bash -eux
 
+##FIXME: collect parameters at startup
+# passphrase
+# keyboard
+# language
+# locales
+# timezone
+# hostname
+# domain
+# root passwd
+# fullname
+# username
+# user passwd
+# desktops=kde
+
 function make_partitions() {
   local drive=/dev/nvme0n1
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
@@ -78,6 +92,8 @@ function install_debian() {
   local character=bullseye
   apt update
   apt install -y debootstrap
+  ##FIXME: retry on network errors
+  debootstrap --download-only ${character} /mnt
   debootstrap --download-only ${character} /mnt
   debootstrap --download-only ${character} /mnt
   debootstrap --download-only ${character} /mnt
@@ -107,9 +123,8 @@ EOD
 }
 
 function setup_chroot() {
-  # bind volumes
+  # configure chroot environment
   for dir in sys dev proc ;do mount --rbind /${dir} /mnt/${dir} && mount --make-rslave /mnt/${dir} ;done
-  # setup networking
   cp /etc/resolv.conf /mnt/etc
   # copy scripts
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))

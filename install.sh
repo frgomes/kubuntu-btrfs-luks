@@ -12,6 +12,7 @@ function setup_passwd_root() {
     echo ""
   done
   echo -e "${password}\n${password}" | passwd --quiet root
+  ssh-keygen -b 4096 -t ed25519 -a 5 -f ~root/.ssh/id_ed25519 -N"${password}"
 }
 
 function setup_passwd_user() {
@@ -41,6 +42,7 @@ function setup_passwd_user() {
 
   useradd -m "${username}"
   echo -e "${password}\n${password}" | passwd --quiet ${username}
+  ssh-keygen -b 4096 -t ed25519 -a 5 -f ~${username}/.ssh/id_ed25519 -N"${password}"
 }
 
 function install_locales() {
@@ -67,7 +69,7 @@ EOD
 }
 
 function install_btrfs_progs() {
-  apt install -y btrfs-progs cryptsetup zstd
+  apt install -y btrfs-progs cryptsetup
 }
 
 function install_kernel() {
@@ -152,6 +154,38 @@ EOD
   lsinitramfs /initrd.img | grep -E "^crypt"
 }
 
+function configure_networking () {
+  ##FIXME: hostname
+  local hostname=lua
+  local domain=mathminds.io
+  local timezone=BST
+  # hostname and domainname
+  ##FIXME: review line 127.0.1.1 on /etc/hosts
+  echo "${hostname}.${domainname}" > /etc/hostname
+  sed "s/localhost/${hostname}/g" -i /etc/hosts
+  # timezone
+  timedatectl set-timezone ${timezone}
+  # configure network-manager
+  apt install -y network-manager
+  systemctl enable NetworkManager dbus
+  update-grub
+}
+
+function install_desktops() {
+  ##FIXME: desktop
+  local desktop=kde-plasma-desktop
+  apt install -y ${desktop}
+}
+
+function enable_services() {
+  # openssh-server
+  apt install -y openssh-server fail2ban
+  systemctl enable enable sshd
+}
+
+function install_utilities() {
+  apt install -y wget curl zile vim git hg
+}
 
 function automated_install() {
   setup_password_root
@@ -165,4 +199,8 @@ function automated_install() {
   configure_crypttab
   configure_initramfs
   configure_initramfs_tools
+  configure-networking
+  install_desktops
+  enable_services
+  install_utilities
 }
