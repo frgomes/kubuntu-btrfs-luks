@@ -22,11 +22,10 @@ function setup_passwd_user() {
   done
 
   local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' | sed -E 's/[ \t]+//g')
-  local confirm=
-  while [ -z "${username}" ] ;do
-        echo -n "Enter username for user ${fullname}: "
-    read username
-  done
+  while
+    echo -n "Enter username for user ${fullname}: "
+    read -i "${username}" username
+  do [ -z "${username}" ] ;done
 
   local password=password
   local confirm=
