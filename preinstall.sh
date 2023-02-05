@@ -93,10 +93,15 @@ deb-src http://deb.debian.org/debian ${character}-updates main contrib non-free
 EOD
 }
 
-function create_chroot() {
+function setup_chroot() {
+  # bind volumes
   for dir in sys dev proc ;do mount --rbind /${dir} /mnt/${dir} && mount --make-rslave /mnt/${dir} ;done
+  # setup networking
   cp /etc/resolv.conf /mnt/etc
-  chroot /mnt /bin/bash
+  # copy scripts
+  local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}")
+  mkdir -p /mnt/tmp/chroot_install
+  cp -pv ${dir}/*.sh /mnt/tmp/chroot_install
 }
 
 function install_locales() {
@@ -168,11 +173,6 @@ function automated_install() {
   mount_volumes
   install_debian
   update_sources
-  create_chroot
-  install_locales
-  install_btrfs_progs
-  install_kernel
-  setup_root
-  setup_user
-  create_fstab
+  setup_chroot
+  chroot /mnt /tmp/chroot/install.sh
 }
