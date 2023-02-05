@@ -142,8 +142,8 @@ function setup_chroot() {
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   mkdir -p /mnt/tmp
 
-  echo cp -pv ${dir} /mnt/tmp
-  cp -pv ${dir} /mnt/tmp
+  echo cp -rpv ${dir} /mnt/tmp/chroot
+  cp -rpv ${dir} /mnt/tmp/chroot
   # debugging
   ls -al /mnt/tmp/chroot
 }
