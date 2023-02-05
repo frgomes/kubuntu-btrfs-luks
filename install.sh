@@ -125,7 +125,7 @@ function create_volume_unlock_keys() {
 
 function configure_crypttab() {
   local partition=/dev/nvme0n1p
-  fgrep "${partition}" /etc/crypttab || cat <<EOD >> /etc/crypttab
+  fgrep "${partition}" /etc/crypttab > /dev/null || cat <<EOD >> /etc/crypttab
 cryptswap ${partition}2 /boot/volume-swap.key luks,discard,key-slot=1
 cryptroot ${partition}4 /boot/volume-root.key luks,discard,key-slot=2
 EOD
@@ -135,13 +135,13 @@ EOD
 
 function configure_initramfs() {
   echo "[ update /etc/cryptsetup-initramfs/conf-hook ]"
-  fgrep '#KEYFILE_PATTERN=' /etc/cryptsetup-initramfs/conf-hook || sed 's|#KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' -i /etc/cryptsetup-initramfs/conf-hook
+  fgrep '#KEYFILE_PATTERN=' /etc/cryptsetup-initramfs/conf-hook > /dev/null || sed 's|#KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' -i /etc/cryptsetup-initramfs/conf-hook
   cat /etc/cryptsetup-initramfs/conf-hook
 }
 
 function configure_initramfs_tools() {
   echo "[ update /etc/initramfs-tools/initramfs.conf ]"
-  fgrep 'UMASK=0077' /etc/initramfs-tools/initramfs.conf || echo "UMASK=0077" > /etc/initramfs-tools/initramfs.conf
+  fgrep 'UMASK=0077' /etc/initramfs-tools/initramfs.conf > /dev/null || echo "UMASK=0077" > /etc/initramfs-tools/initramfs.conf
   cat /etc/initramfs-tools/initramfs.conf
 }
 
