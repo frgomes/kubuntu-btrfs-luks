@@ -25,11 +25,7 @@ function setup_passwd_user() {
   local confirm=
   while [ -z "${username}" -o \( "${username}" != "${confirm}" \) ] ;do
     echo -n "Enter username for user ${fullname}: "
-    read -s username
-    echo ""
-    echo -n "Confirm username for user ${fullname}: "
-    read -s confirm
-    echo ""
+    read username
   done
 
   local password=password
