@@ -4,7 +4,7 @@ function install_locales() {
   local layout=gb
   local lang=en_GB
   # define default keyboard configuration
-  cat <<EOD > /mnt/etc/default/keyboard
+  cat <<EOD > /etc/default/keyboard
 # KEYBOARD CONFIGURATION FILE
 # Consult the keyboard(5) and xkeyboard-config(7) manual page.
 
