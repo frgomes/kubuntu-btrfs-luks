@@ -179,6 +179,3 @@ function automated_install() {
   echo -n "PRESS ENTER"; read -s dummy
   # umount_and_reboot
 }
-
-
-automated_install
