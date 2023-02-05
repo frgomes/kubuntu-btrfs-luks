@@ -144,11 +144,8 @@ function setup_chroot() {
 
   echo cp -rpv ${dir} /mnt/tmp/chroot
   cp -rpv ${dir} /mnt/tmp/chroot
-  # debugging
-  ls -al /mnt/tmp/chroot
-}
-
-function perform_installation() {
+  # perform installation
+  chroot /mnt /tmp/chroot/post-install.sh
   chroot /mnt /tmp/chroot/post-install.sh
   echo -n "PRESS ENTER"; read -s dummy
 }
@@ -181,8 +178,6 @@ function automated_install() {
   update_sources
   echo -n "PRESS ENTER"; read -s dummy
   setup_chroot
-  echo -n "PRESS ENTER"; read -s dummy
-  perform_installation
   echo -n "PRESS ENTER"; read -s dummy
   # umount_and_reboot
 }
