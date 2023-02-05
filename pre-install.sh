@@ -158,6 +158,30 @@ function umount_and_reboot() {
   reboot now
 }
 
+###  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function setup_password_root() {
+  echo "[ setup_passwd_root ]"
+  local password=password
+  local confirm=
+  while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
+    echo -n "Enter password for root: "
+    read -s password
+    echo ""
+    echo -n "Confirm password for root: "
+    read -s confirm
+    echo ""
+  done
+  echo -e "${password}\n${password}" | passwd --quiet root
+  ssh-keygen -b 4096 -t ed25519 -a 5 -f ~root/.ssh/id_ed25519 -N"${password}"
+}
+
+
+###  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 function automated_install() {
   make_partitions "${passphrase}"
@@ -178,5 +202,15 @@ function automated_install() {
   echo -n "PRESS ENTER"; read -s dummy
   setup_chroot
   echo -n "PRESS ENTER"; read -s dummy
+
+  ## ////////////////////////////////////////////
+
+  chroot /mnt setup_password_root
+  echo -n "PRESS ENTER"; read -s dummy
+
+
+
+  ## ////////////////////////////////////////////
+
   # umount_and_reboot
 }

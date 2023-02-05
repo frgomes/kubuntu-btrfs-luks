@@ -1,7 +1,5 @@
 #!/bin/bash -eux
 
-rehash -h
-
 function setup_password_root() {
   echo "[ setup_passwd_root ]"
   local password=password
