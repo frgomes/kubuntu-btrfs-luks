@@ -133,4 +133,9 @@ function automated_install() {
 }
 
 
-echo "XXXXXXXXXXXXXXXXXXXXXX $@"
+function test_automated_install() {
+  local passphrase="$1"
+  echo ${passphrase}
+}
+
+test_automated_install "$@"

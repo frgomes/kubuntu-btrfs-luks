@@ -11,9 +11,7 @@ function make_partitions() {
   parted -s ${drive} -- print
 }
 
-function make_luks() {
-  local partition=/dev/nvme0n1p
-
+function define_luks_passphrase() {
   local passphrase=passphrase
   local confirm=wrong
   while [ "${passphrase}" != "${confirm}" ] ;do
@@ -24,6 +22,27 @@ function make_luks() {
     read -s confirm
     echo ""
   done
+  echo ${passphrase}
+}
+
+
+
+
+
+
+function test_make_luks() {
+  local passphrase=${1:-$(dd bs=1 count=32 if=/dev/urandom | base64)}
+  echo ${passphrase}
+}
+
+
+
+
+
+
+function make_luks() {
+  local passphrase=${1:-$(dd bs=1 count=32 if=/dev/urandom | base64)}
+  local partition=/dev/nvme0n1p
   # swap
   echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}2 -
   echo -n "${passphrase}" | cryptsetup luksOpen ${partition}2 cryptswap -
@@ -115,9 +134,10 @@ function setup_chroot() {
   ls -al /mnt/tmp/chroot
 }
 
-function automated_install() {
-  make_partitions
-  make_luks
+function automated_preinstall() {
+  make_partitions "${passphrase}"
+  local passphrase="$(define_luks_passphrase)"
+  make_luks "${passphrase}"
   format_filesystems
   make_volumes
   mount_volumes
@@ -127,5 +147,11 @@ function automated_install() {
   # run next step in a jail
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   local base=$(dirname ${dir})
-  chroot /mnt /tmp/${base}/install.sh
+  chroot /mnt /tmp/${base}/install.sh "${passphrase}"
+}
+
+
+function test() {
+  local passphrase="$(define_luks_passphrase)"
+  test_make_luks "${passphrase}"
 }
