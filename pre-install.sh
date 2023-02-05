@@ -462,13 +462,13 @@ function automated_install() {
 #  echo -n "PRESS ENTER"; read -s dummy
 #  update_sources
 #  echo -n "PRESS ENTER"; read -s dummy
-#  setup_chroot
-#  echo -n "PRESS ENTER"; read -s dummy
-#
-#  ## ////////////////////////////////////////////
-#
-  chroot /mnt ./setup_password_root.sh
-  echo -n "PRESS ENTER"; read -s dummy
+
+
+setup_chroot
+echo -n "PRESS ENTER"; read -s dummy
+
+chroot /mnt ./setup_password_root.sh
+echo -n "PRESS ENTER"; read -s dummy
 
 
 
