@@ -142,9 +142,10 @@ function setup_chroot() {
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   mkdir -p /mnt/tmp
 
-  echo cp -rpv ${dir} /mnt/tmp/chroot
-  cp -rpv ${dir} /mnt/tmp/chroot
-
+  cp -rp ${dir} /mnt/tmp
+  mv /mnt/tmp/kubuntu-btrfs-luks /mnt/tmp/chroot
+  echo "[ /mnt/tmp/chroot ]"
+  ls /mnt/tmp/chroot
   ### perform installation
   ##chroot /mnt /tmp/chroot/post-install.sh
   ##echo -n "PRESS ENTER"; read -s dummy
@@ -467,7 +468,7 @@ function automated_install() {
 setup_chroot
 echo -n "PRESS ENTER"; read -s dummy
 
-chroot /mnt ./setup_password_root.sh
+chroot /mnt /tmp/chroot/setup_password_root.sh
 echo -n "PRESS ENTER"; read -s dummy
 
 
