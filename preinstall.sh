@@ -100,8 +100,10 @@ function setup_chroot() {
   cp /etc/resolv.conf /mnt/etc
   # copy scripts
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
-  mkdir -p /mnt/tmp/chroot
-  cp -rpv ${dir} /mnt/tmp/chroot
+  mkdir -p /mnt/tmp
+  cp -pv ${dir} /mnt/tmp
+  # debugging
+  ls -al /mnt/tmp/chroot
 }
 
 function automated_install() {
@@ -113,5 +115,8 @@ function automated_install() {
   install_debian
   update_sources
   setup_chroot
-  chroot /mnt /tmp/chroot/install.sh
+
+  local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+  local base=$(dirname ${dir})
+  chroot /mnt /tmp/${base}/install.sh
 }
