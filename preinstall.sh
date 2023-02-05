@@ -3,15 +3,12 @@
 function make_partitions() {
   local device=/dev/nvme0n1
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
-  parted -- -s ${device} <<EOD
-mklabel gpt
-mkpart primary 1MiB 513MiB
-mkpart primary 513MiB 16897MiB
-mkpart primary 16897MiB 18495MiB
-mkpart primary 18495MiB -1s
-print
-quit
-EOD
+  parted -s ${device} -- mklabel gpt
+  parted -s ${device} -- mkpart primary 1MiB 513MiB
+  parted -s ${device} -- mkpart primary 513MiB 16897MiB
+  parted -s ${device} -- mkpart primary 16897MiB 18495MiB
+  parted -s ${device} -- mkpart primary 18495MiB -1s
+  parted -s ${device} -- print
 }
 
 function format_efi() {
