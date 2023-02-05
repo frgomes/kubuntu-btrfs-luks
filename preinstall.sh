@@ -50,6 +50,7 @@ function make_volumes() {
 }
 
 function mount_volumes() {
+  local device=/dev/nvme0n1
   local options=,ssd,noatime,compress=zstd,space_cache=v2,commit=120
   # root (btrfs)
   mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
@@ -58,7 +59,7 @@ function mount_volumes() {
   mount -t btrfs -o ${options},subvol=@snapshots /dev/mapper/cryptroot /mnt/.snapshots
   # efi
   mkdir -p /mnt/boot/efi
-  mount /mnt/${device}p1 /mnt/boot/efi
+  mount ${device}p1 /mnt/boot/efi
   # swap
   swapon /dev/mapper/cryptswap
 }
