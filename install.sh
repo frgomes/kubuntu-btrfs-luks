@@ -174,20 +174,37 @@ function configure_networking () {
 function install_desktops() {
   ##FIXME: desktop
   local desktop=kde-plasma-desktop
+  apt update
   apt install -y ${desktop}
+}
+
+function install_timeshift() {
+  apt update
+  apt install -y timeshift snapper-gui
 }
 
 function enable_services() {
   # openssh-server
+  apt update
   apt install -y openssh-server fail2ban
   systemctl enable enable sshd
 }
 
 function install_utilities() {
-  apt install -y wget curl zile vim git hg
+  apt update
+  # download managers
+  apt install -y wget curl
+  # text editors
+  apt install -y zile emacs vim
+  # source code management
+  apt install -y git hg
 }
 
 function umount_and_reboot() {
+  sync; sync; sync
+  echo "[ Installation completed successfully ]"
+  echo "Please remove the installation media and press ENTER"
+  read -s dummy
   umount -a
   reboot
 }
