@@ -65,6 +65,9 @@ function install_debian() {
   local character=bullseye
   apt update
   apt install -y debootstrap
+  debootstrap --download-only ${character} /mnt
+  debootstrap --download-only ${character} /mnt
+  debootstrap --download-only ${character} /mnt
   debootstrap ${character} /mnt
 }
 
@@ -159,7 +162,6 @@ function create_fstab() {
 
 function automated_install() {
   make_partitions
-  format_efi
   make_luks
   format_filesystems
   make_volumes
