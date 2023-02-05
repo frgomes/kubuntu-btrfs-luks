@@ -18,7 +18,7 @@ function setup_passwd_user() {
   local fullname=""
   while [ -z "${fullname}" ] ;do
     echo -n "Enter full name for first user: "
-    read username
+    read fullname
   done
 
   echo -n "Enter full name for first user: "
