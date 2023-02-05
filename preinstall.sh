@@ -12,6 +12,8 @@ function make_partitions() {
   parted ${device} mkpart primary 16897MiB MiB 18495MiB
   # root (btrfs)
   parted ${device} mkpart primary 18495MiB 100%
+  # debugging
+  parted ${device} print
 }
 
 function format_efi() {
