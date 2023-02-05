@@ -14,9 +14,9 @@ function make_partitions() {
 function define_luks_passphrase() {
   local passphrase=passphrase
   local confirm=wrong
-  while [ "${passphrase}" != "${confirm}" ] ;do
+  while [ -z "${passphrase}" -o \( "${passphrase}" != "${confirm}" \) ] ;do
     echo -n "Enter passphrase for encrypted volume: "
-    read -s password
+    read -s passphrase
     echo ""
     echo -n "Confirm passphrase for encrypted volume: "
     read -s confirm
