@@ -150,6 +150,7 @@ function setup_chroot() {
 
 function perform_installation() {
   echo chroot /mnt /tmp/chroot/post-install.sh
+  echo -n "PRESS ENTER"; read -s dummy
 }
 
 function umount_and_reboot() {
