@@ -1,79 +1,178 @@
 #!/bin/bash -eux
 
 function make_partitions() {
-parted /dev/nvme0n1 <<EOD
-mklabel gpt
-mkpart primary 1MiB 513MiB
-mkpart primary 513MiB 4609MiB
-mkpart primary 4609MiB 100%
-quit
-EOD
+  local device=/dev/nvme0n1
+  ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
+  parted ${device} mklabel gpt
+  # efi
+  parted ${device} mkpart primary 1MiB 513MiB
+  # swap 16Gb
+  parted ${device} mkpart primary 513MiB 16897MiB
+  # boot
+  parted ${device} mkpart primary 16897MiB MiB 18495MiB
+  # root (btrfs)
+  parted ${device} mkpart primary 18495MiB 100%
+}
+
+function format_efi() {
+  local device=/dev/nvme0n1
+  # efi
+  mkfs.vfat ${device}p1
 }
 
 function make_luks() {
+  local device=/dev/nvme0n1
   echo -n "Enter passphrase for encrypted volume: "
   read -s passphrase
-  echo ""
-  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks1 /dev/nvme0n1p3 -
-  echo -n "${passphrase}" | cryptsetup luksOpen /dev/nvme0n1p3 cryptdata -
+  # swap
+  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${device}p2 -
+  echo -n "${passphrase}" | cryptsetup luksOpen ${device}p2 cryptswap -
+  # root (btrfs)
+  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${device}p4 -
+  echo -n "${passphrase}" | cryptsetup luksOpen ${device}p4 cryptroot -
 }
 
 function make_filesystems() {
-  mkfs.fat -F32 /dev/nvme0n1p1
-  mkfs.btrfs /dev/mapper/cryptdata
+  lsblk
+  # swap
+  mkswap /dev/mapper/cryptswap
+  # root (btrfs)
+  mkfs.btrfs /dev/mapper/cryptroot
 }
 
-function change_scripts() {
-cat <<EOD | base64 -d | tee > /usr/lib/partman/mount.d/70btrfs
-IyEvYmluL3NoCgpzZXQgLS0gJDEKCmZzPSQxCm1wPSQyCnR5cGU9JDMKb3B0aW9ucz0kNApkdW1w
-PSQ1CnBhc3M9JDYKCmNhc2UgJHR5cGUgaW4KICAgIGJ0cmZzKQoJb3B0aW9ucz0iJHtvcHRpb25z
-JSxzdWJ2b2w9Kn0iCgkjZm9yIHJlbW92aW5nIHRoZSBvcHRpb24gc3Vidm9sLHdoZW4gdGhhdHMg
-dGhlIG9ubHkgb3B0aW9uCgkjZWc6IG9wdGlvbnM9PSJzdWJ2b2w9QCIsIG5vIGNvbW1hIHByZXNl
-bnQKCW9wdGlvbnM9IiR7b3B0aW9ucyVzdWJ2b2w9Kn0iCgltb3VudCAtdCBidHJmcyAke29wdGlv
-bnM6Ky1vICIkb3B0aW9ucyJ9ICRmcyAvdGFyZ2V0JG1wIHx8IGV4aXQgMQoJY2FzZSAkbXAgaW4K
-CSAgICAvKQoJCWJ0cmZzIHN1YnZvbHVtZSBjcmVhdGUgL3RhcmdldCRtcC9ACgkJY2htb2QgNzU1
-IC90YXJnZXQkbXAvQAoJCXVtb3VudCAvdGFyZ2V0JG1wCgkJb3B0aW9ucz0iJHtvcHRpb25zOisk
-b3B0aW9ucyx9c3Vidm9sPUAsc3NkLG5vYXRpbWUsc3BhY2VfY2FjaGUsY29tbWl0PTEyMCxjb21w
-cmVzcz16c3RkIgoJCW1vdW50IC10IGJ0cmZzIC1vICRvcHRpb25zICRmcyAvdGFyZ2V0JG1wCgkJ
-OzsKCSAgICAvaG9tZSkKCQlidHJmcyBzdWJ2b2x1bWUgY3JlYXRlIC90YXJnZXQkbXAvQGhvbWUK
-CQljaG1vZCA3NTUgL3RhcmdldCRtcC9AaG9tZQoJCXVtb3VudCAvdGFyZ2V0JG1wCgkJb3B0aW9u
-cz0iJHtvcHRpb25zOiskb3B0aW9ucyx9c3Vidm9sPUBob21lLHNzZCxub2F0aW1lLHNwYWNlX2Nh
-Y2hlLGNvbW1pdD0xMjAsY29tcHJlc3M9enN0ZCIKCQltb3VudCAtdCBidHJmcyAtbyAkb3B0aW9u
-cyAkZnMgL3RhcmdldCRtcAoJCTs7Cgllc2FjCgllY2hvICJ1bW91bnQgL3RhcmdldCRtcCIKCWV4
-aXQgMAoJOzsKZXNhYwoKZXhpdCAxCg==
-EOD
+function make_volumes() {
+  mount /dev/mapper/cryptroot /mnt
+  btrfs subvolume create /mnt/@
+  btrfs subvolume create /mnt/@home
+  btrfs subvolume create /mnt/@snapshots
+  umount /mnt
+  lsblk
+}
 
-cat <<EOD | base64 -d | tee > /usr/lib/partman/fstab.d/btrfs
-IyEvYmluL3NoCgouIC9saWIvcGFydG1hbi9saWIvYmFzZS5zaAoKaG9tZV9mb3VuZD0idW5rbm93
-biIKCmZvciBkZXYgaW4gJERFVklDRVMvKjsgZG8KCVsgLWQgJGRldiBdIHx8IGNvbnRpbnVlCglj
-ZCAkZGV2CglvcGVuX2RpYWxvZyBQQVJUSVRJT05TCgl3aGlsZSB7IHJlYWRfbGluZSBudW0gaWQg
-c2l6ZSB0eXBlIGZzIHBhdGggbmFtZTsgWyAiJGlkIiBdOyB9OyBkbwoJCVsgJGZzICE9IGZyZWUg
-XSB8fCBjb250aW51ZQoJCVsgLWYgIiRpZC9tZXRob2QiIF0gfHwgY29udGludWUKCQlbIC1mICIk
-aWQvYWN0aW5nX2ZpbGVzeXN0ZW0iIF0gfHwgY29udGludWUKCQltZXRob2Q9JChjYXQgJGlkL21l
-dGhvZCkKCQlmaWxlc3lzdGVtPSQoY2F0ICRpZC9hY3RpbmdfZmlsZXN5c3RlbSkKCQltb3VudHBv
-aW50PSQoY2F0ICRpZC9tb3VudHBvaW50KQoJCWNhc2UgIiRmaWxlc3lzdGVtIiBpbgoJCSAgICBi
-dHJmcykKCQkJWyAtZiAiJGlkL21vdW50cG9pbnQiIF0gfHwgY29udGludWUKCQkJIyBkdWUgdG8g
-IzI0OTMyMiwgIzI1NTEzNSwgIzI1ODExNzoKCQkJaWYgWyAiJG1vdW50cG9pbnQiID0gL3RtcCBd
-OyB0aGVuCgkJCQlybSAtZiAkaWQvb3B0aW9ucy9ub2V4ZWMKCQkJZmkKCQkJb3B0aW9ucz0kKGdl
-dF9tb3VudG9wdGlvbnMgJGRldiAkaWQpCgkJCWlmIFsgIiRtb3VudHBvaW50IiA9IC8gXTsgdGhl
-bgoJCQkJaWYgWyAiJGhvbWVfZm91bmQiID0gInVua25vd24iIF07IHRoZW4KCQkJCQlob21lX2Zv
-dW5kPSJmYWxzZSIKCQkJCWZpCgkJCQlwYXNzPTAKCQkJCWhvbWVfb3B0aW9ucz0iJHtvcHRpb25z
-Oiskb3B0aW9ucyx9c3Vidm9sPUBob21lLHNzZCxub2F0aW1lLHNwYWNlX2NhY2hlLGNvbW1pdD0x
-MjAsY29tcHJlc3M9enN0ZCIKCQkJCW9wdGlvbnM9IiR7b3B0aW9uczorJG9wdGlvbnMsfXN1YnZv
-bD1ALHNzZCxub2F0aW1lLHNwYWNlX2NhY2hlLGNvbW1pdD0xMjAsY29tcHJlc3M9enN0ZCIKCQkJ
-CWhvbWVfcGF0aD0iJHBhdGgiCgkJCQlob21lX21wPSIkbW91bnRwb2ludCJob21lCgkJCWVsaWYg
-WyAiJG1vdW50cG9pbnQiID0gL2hvbWUgXTsgdGhlbgoJCQkJcGFzcz0wCgkJCQlvcHRpb25zPSIk
-e29wdGlvbnM6KyRvcHRpb25zLH1zdWJ2b2w9QGhvbWUsc3NkLG5vYXRpbWUsc3BhY2VfY2FjaGUs
-Y29tbWl0PTEyMCxjb21wcmVzcz16c3RkIgoJCQkJaG9tZV9mb3VuZD10cnVlCgkJCWVsc2UKCQkJ
-CXBhc3M9MAoJCQlmaQoJCQllY2hvICIkcGF0aCIgIiRtb3VudHBvaW50IiBidHJmcyAkb3B0aW9u
-cyAwICRwYXNzCgkJCTs7CgkJICAgICopCgkJCWlmIFsgIiRtb3VudHBvaW50IiA9ICIvaG9tZSIg
-XTsgdGhlbgoJCQkJaG9tZV9mb3VuZD0idHJ1ZSIKCQkJZmkKCQkJOzsKCQllc2FjCglkb25lCglj
-bG9zZV9kaWFsb2cKZG9uZQoKaWYgWyAiJGhvbWVfZm91bmQiID0gImZhbHNlIiBdOyB0aGVuCgll
-Y2hvICIkaG9tZV9wYXRoIiAiJGhvbWVfbXAiIGJ0cmZzICIkaG9tZV9vcHRpb25zIiAwIDAKCWhv
-bWVfZm91bmQ9InRydWUiCmZpCQo=
+function mount_volumes() {
+  local options=,ssd,noatime,compress=zstd,space_cache=v2,commit=120
+  # root (btrfs)
+  mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptoroot /mnt
+  mkdir -p /mnt/home /mnt/.snapshots
+  mount -t btrfs -o ${options},subvol=@home      /dev/mapper/cryptoroot /mnt/home
+  mount -t btrfs -o ${options},subvol=@snapshots /dev/mapper/cryptoroot /mnt/.snapshots
+  # efi
+  mkdir -p /mnt/boot/efi
+  mount /mnt/${device}p1 /mnt/boot/efi
+  # swap
+  swapon /dev/mapper/cryptswap
+}
+
+function install_debian() {
+  local character=bullseye
+  apt update
+  apt install -y debootstrap
+  debootstrap ${character} /mnt
+}
+
+function update_sources() {
+  local character=bullseye
+  cat <<EOD > /mnt/etc/apt/sources.list
+deb     http://deb.debian.org/debian ${character} main contrib non-free
+deb-src http://deb.debian.org/debian ${character} main contrib non-free
+
+deb     http://deb.debian.org/debian-security/ ${character}-security main contrib non-free
+deb-src http://deb.debian.org/debian-security/ ${character}-security main contrib non-free
+
+deb     http://deb.debian.org/debian ${character}-updates main contrib non-free
+deb-src http://deb.debian.org/debian ${character}-updates main contrib non-free
+
+### backports
+# deb     http://deb.debian.org/debian ${character}-backports main contrib non-free
+# deb-src http://deb.debian.org/debian ${character}-backports main contrib non-free
+
+### unstable
+# deb     http://deb.debian.org/debian/ unstable main
+# deb-src http://deb.debian.org/debian/ unstable main
 EOD
 }
 
-make_partitions
-make_luks
-# change_scripts
+function create_chroot() {
+  for dir in sys dev proc ;do mount --rbind /${dir} /mnt/${dir} && mount --make-rslave /mnt/${dir} ;done
+  cp /etc/resolv.conf /mnt/etc
+  chroot /mnt /bin/bash
+}
+
+function install_locales() {
+  apt update
+  apt install -y locales
+  apt-reconfigure locales
+}
+
+function install_btrfs_progs() {
+  apt install -y btrfs-progs crypsetup
+}
+
+function install_kernel() {
+  ##FIXME: should detect hardware architecture
+  local firmware=$(apt search firmware | grep -E "^firmware-" | cut -d/ -f1 | fgrep -v microbit)
+  apt install -y linux-image-amd64 intel-microcode amd64-microcode 
+}
+
+function setup_root() {
+  local password=password
+  local confirm=wrong
+  while [ "${password}" != "${confirm}" ] ;do
+    echo -n "Enter password for root: "
+    read -s password
+    echo -n "Confirm password for root: "
+    read -s confirm
+  done
+  echo "${password}" | passwd root --stdin
+}
+
+function setup_user() {
+  local fullname="Debian"
+  echo -n "Enter full name of first user: "
+  read fullname
+
+  local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]')
+  echo -n "Enter username of first user: "
+  read username
+
+  local password=password
+  local confirm=wrong
+  while [ "${password}" != "${confirm}" ] ;do
+    echo -n "Enter password for ${username}: "
+    read -s password
+    echo -n "Confirm password for ${username}: "
+    read -s confirm
+  done
+  echo "${password}" | passwd ${username} --stdin
+}
+
+function create_fstab() {
+  local device=/dev/nvme0n1
+  local uuid_efi=$(blkid | fgrep ${device}p1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  local uuid_swap=$(blkid | fgrep ${device}p2 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  local uuid_boot=$(blkid | fgrep ${device}p3 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  local uuid_root=$(blkid | fgrep ${device}p4 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  cat /proc/mounts | grep -E "^/dev/mapper/|^tmpfs|^${device}" | \
+    sed -E "s|^/dev/mapper/cryptroot|${uuid_root}|" | \
+    sed -E "s|^tmpfs|${uuid_root}|" | \
+    sed -E "s|${device}p1|${uuid_efi}"
+}
+
+
+function automated_install() {
+  make_partitions
+  format_efi
+  make_luks
+  format_filesystems
+  make_volumes
+  mount_volumes
+  install_debian
+  update_sources
+  create_chroot
+  install_locales
+  install_btrfs_progs
+  install_kernel
+  setup_root
+  setup_user
+  create_fstab
+}
