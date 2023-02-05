@@ -135,13 +135,13 @@ EOD
 
 function configure_initramfs() {
   echo "[ update /etc/cryptsetup-initramfs/conf-hook ]"
-  fgrep -E '#KEYFILE_PATTERN=' /etc/cryptsetup-initramfs/conf-hook || sed 's|#KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' -i /etc/cryptsetup-initramfs/conf-hook
+  fgrep '#KEYFILE_PATTERN=' /etc/cryptsetup-initramfs/conf-hook || sed 's|#KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' -i /etc/cryptsetup-initramfs/conf-hook
   cat /etc/cryptsetup-initramfs/conf-hook
 }
 
 function configure_initramfs_tools() {
   echo "[ update /etc/initramfs-tools/initramfs.conf ]"
-  fgrep -E 'UMASK=0077' /etc/initramfs-tools/initramfs.conf || echo "UMASK=0077" > /etc/initramfs-tools/initramfs.conf
+  fgrep 'UMASK=0077' /etc/initramfs-tools/initramfs.conf || echo "UMASK=0077" > /etc/initramfs-tools/initramfs.conf
   cat /etc/initramfs-tools/initramfs.conf
 }
 
