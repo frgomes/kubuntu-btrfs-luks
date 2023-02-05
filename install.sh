@@ -251,14 +251,9 @@ function enable_services() {
   systemctl enable sshd
 }
 
-function umount_and_reboot() {
+function finish_installation() {
   snapper create --type single --description "Installation completed successfully" --userdata "important=yes"
   sync; sync; sync
-  umount -a
-  echo "[ Installation completed successfully ]"
-  echo "Please remove the installation media and press ENTER"
-  read -s dummy
-  reboot
 }
 
 

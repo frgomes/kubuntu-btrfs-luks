@@ -134,6 +134,15 @@ function setup_chroot() {
   ls -al /mnt/tmp/chroot
 }
 
+function umount_and_reboot() {
+  echo "[ Installation completed successfully ]"
+  echo "Please remove the installation media and press ENTER"
+  read -s dummy
+  sync; sync;
+  reboot now
+}
+
+
 function automated_preinstall() {
   make_partitions "${passphrase}"
   define_luks_passphrase
