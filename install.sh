@@ -134,7 +134,7 @@ EOD
 }
 
 function configure_initramfs() {
-  grep -E '^#[ \t]+KEYFILE_PATTERN=' /etc/cryptsetup-initramfs/conf-hook || sed -E 's|^#[ \t]+KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' /etc/cryptsetup-initramfs/conf-hook
+  grep -E '/boot/*.key' /etc/cryptsetup-initramfs/conf-hook || sed -E 's|^#[ \t]+KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' /etc/cryptsetup-initramfs/conf-hook
   # debugging
   cat /etc/cryptsetup-initramfs/conf-hook
 }
