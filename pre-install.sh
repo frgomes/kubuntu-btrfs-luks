@@ -145,8 +145,7 @@ function setup_chroot() {
   echo cp -rpv ${dir} /mnt/tmp/chroot
   cp -rpv ${dir} /mnt/tmp/chroot
   # perform installation
-  echo chroot /mnt bash -c /tmp/chroot/post-install.sh
-  chroot /mnt bash -c /tmp/chroot/post-install.sh
+  chroot /mnt /tmp/chroot/post-install.sh
   echo -n "PRESS ENTER"; read -s dummy
 }
 
