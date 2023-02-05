@@ -116,6 +116,7 @@ function create_volume_unlock_keys() {
   local passphrase="$(cat /dev/shm/luks_passphrase)"
   dd bs=1 count=512 if=/dev/urandom of=/boot/volume-root.key
   dd bs=1 count=512 if=/dev/urandom of=/boot/volume-swap.key
+  echo XXXXXXXXXXXXXXXXXXXXXX "${passphrase}"
   echo "${passphrase}" | cryptsetup luksAddKey ${partition}2 /boot/volume-swap.key -
   echo "${passphrase}" | cryptsetup luksAddKey ${partition}4 /boot/volume-root.key -
   cat /boot/volume-swap.key | base64 -d
