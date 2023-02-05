@@ -3,8 +3,8 @@
 function install_locales() {
   apt update
   apt install -y locales
-  ##FIXME: do we really need to setup locales at this point?
-  #dpkg-reconfigure locales
+  dpkg-reconfigure keyboard
+  dpkg-reconfigure locales
 }
 
 function install_btrfs_progs() {
