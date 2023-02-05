@@ -133,6 +133,12 @@ EOD
   cat /etc/crypttab
 }
 
+function configure_initramfs() {
+  grep -E '^#[ \t]+KEYFILE_PATTERN=' || sed -E 's|^#[ \t]+KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' /etc/cryptsetup-initramfs/conf-hook
+  # debugging
+  cat /etc/cryptsetup-initramfs/conf-hook
+}
+
 
 function automated_install() {
   setup_password_root
