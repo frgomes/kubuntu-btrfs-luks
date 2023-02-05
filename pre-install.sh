@@ -15,6 +15,7 @@
 # desktops=kde
 
 function make_partitions() {
+  echo "[ make_partitions ]"
   local drive=/dev/nvme0n1
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
   parted -s ${drive} -- mklabel gpt
@@ -26,6 +27,7 @@ function make_partitions() {
 }
 
 function define_luks_passphrase() {
+  echo "[ define_luks_passphrase ]"
   local passphrase=passphrase
   local confirm=wrong
   while [ -z "${passphrase}" -o \( "${passphrase}" != "${confirm}" \) ] ;do
@@ -40,6 +42,7 @@ function define_luks_passphrase() {
 }
 
 function make_luks() {
+  echo "[ make_luks ]"
   local partition=/dev/nvme0n1p
   local passphrase="$(cat /dev/shm/luks_passphrase)"
   # swap
@@ -53,6 +56,7 @@ function make_luks() {
 }
 
 function make_filesystems() {
+  echo "[ make_filesystems ]"
   local partition=/dev/nvme0n1p
   # efi
   mkfs.vfat ${partition}1
@@ -65,6 +69,7 @@ function make_filesystems() {
 }
 
 function make_volumes() {
+  echo "[ make_volumes ]"
   mount /dev/mapper/cryptroot /mnt
   btrfs subvolume create /mnt/@
   btrfs subvolume create /mnt/@home
@@ -74,6 +79,7 @@ function make_volumes() {
 }
 
 function mount_volumes() {
+  echo "[ mount_volumes ]"
   local partition=/dev/nvme0n1p
   local options=,ssd,noatime,compress=zstd,space_cache=v2,commit=120
   # root (btrfs)
@@ -89,6 +95,7 @@ function mount_volumes() {
 }
 
 function install_debian() {
+  echo "[ install_debian ]"
   local character=bullseye
   apt update
   apt install -y debootstrap
@@ -101,6 +108,7 @@ function install_debian() {
 }
 
 function update_sources() {
+  echo "[ update_sources ]"
   local character=bullseye
   cat <<EOD > /mnt/etc/apt/sources.list
 deb     http://deb.debian.org/debian ${character} main contrib non-free
@@ -123,6 +131,7 @@ EOD
 }
 
 function setup_chroot() {
+  echo "[ setup_chroot ]"
   # configure chroot environment
   for dir in sys dev proc ;do mount --rbind /${dir} /mnt/${dir} && mount --make-rslave /mnt/${dir} ;done
   cp /etc/resolv.conf /mnt/etc
@@ -135,15 +144,16 @@ function setup_chroot() {
 }
 
 function umount_and_reboot() {
-  echo "[ Installation completed successfully ]"
+  echo "[ umount_and_reboot ]"
   echo "Please remove the installation media and press ENTER"
   read -s dummy
+  echo "[ Installation completed successfully ]"
   sync; sync;
   reboot now
 }
 
 
-function automated_preinstall() {
+function automated_install() {
   make_partitions "${passphrase}"
   define_luks_passphrase
   make_luks
@@ -156,5 +166,6 @@ function automated_preinstall() {
   # run next step in a jail
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   local base=$(dirname ${dir})
-  chroot /mnt /tmp/${base}/install.sh
+  chroot /mnt /tmp/${base}/post-install.sh
+  umount_and_reboot
 }

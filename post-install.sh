@@ -1,6 +1,7 @@
 #!/bin/bash -eux
 
 function setup_passwd_root() {
+  echo "[ setup_passwd_root ]"
   local password=password
   local confirm=
   while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
@@ -16,6 +17,7 @@ function setup_passwd_root() {
 }
 
 function setup_passwd_user() {
+  echo "[ setup_passwd_user ]"
   local fullname=""
   while [ -z "${fullname}" ] ;do
     echo -n "Enter full name for first user: "
@@ -46,6 +48,7 @@ function setup_passwd_user() {
 }
 
 function install_locales() {
+  echo "[ install_locales ]"
   local layout=gb
   local lang=en_GB
   # define default keyboard configuration
@@ -69,6 +72,7 @@ EOD
 }
 
 function install_btrfs_progs() {
+  echo "[ install_btrfs_progs ]"
   apt update
   ##FIXME: handle retries
   apt install -y btrfs-progs cryptsetup snapper
@@ -77,6 +81,7 @@ function install_btrfs_progs() {
 }
 
 function install_kernel() {
+  echo "[ install_kernel ]"
   ##FIXME: should detect hardware architecture
   local hwarch=amd64
   local firmware=$(apt search firmware | grep -E "^firmware-" | cut -d/ -f1 | fgrep -v microbit)
@@ -84,6 +89,7 @@ function install_kernel() {
 }
 
 function create_fstab() {
+  echo "[ create_fstab ]"
   local partition=/dev/nvme0n1p
   local uuid_efi=$(blkid | fgrep ${partition}1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
   local uuid_swap=$(blkid | fgrep ${partition}2 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
@@ -102,12 +108,14 @@ function create_fstab() {
 }
 
 function install_grub() {
+  echo "[ install_grub ]"
   ##FIXME: should detect hardware architecture
   local hwarch=amd64
   apt install -y grub-efi-${hwarch}
 }
 
 function grub_enable_cryptodisk() {
+  echo "[ grub_enable_cryptodisk ]"
   fgrep 'GRUB_ENABLE_CRYPTODISK=yes' /etc/default/grub || sed '/GRUB_CMDLINE_LINUX_DEFAULT/i GRUB_ENABLE_CRYPTODISK=yes' -i /etc/default/grub
   sed 's/GRUB_ENABLE_CRYPTODISK=no/GRUB_ENABLE_CRYPTODISK=yes/' -i /etc/default/grub
   local luks_config=$(blkid | fgrep 'TYPE="crypto_LUKS"' | cut -d' ' -f2 | cut -d= -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]' | sed -E 's/^/,rd.luks.uuid=/' | tr -d '\n')
@@ -118,6 +126,7 @@ function grub_enable_cryptodisk() {
 }
 
 function create_volume_unlock_keys() {
+  echo "[ create_volume_unlock_keys ]"
   local partition=/dev/nvme0n1p
   local passphrase="$(cat /dev/shm/luks_passphrase)"
   dd bs=1 count=512 if=/dev/urandom of=/boot/volume-swap.key
@@ -130,6 +139,7 @@ function create_volume_unlock_keys() {
 }
 
 function configure_crypttab() {
+  echo "[ configure_crypttab ]"
   local partition=/dev/nvme0n1p
   fgrep "${partition}" /etc/crypttab > /dev/null || cat <<EOD >> /etc/crypttab
 cryptswap ${partition}2 /boot/volume-swap.key luks,discard,key-slot=1
@@ -140,13 +150,13 @@ EOD
 }
 
 function configure_initramfs() {
-  echo "[ update /etc/cryptsetup-initramfs/conf-hook ]"
+  echo "[ configure_initramfs ]"
   fgrep '#KEYFILE_PATTERN=' /etc/cryptsetup-initramfs/conf-hook > /dev/null || sed 's|#KEYFILE_PATTERN=|KEYFILE_PATTERN="/boot/*.key"|' -i /etc/cryptsetup-initramfs/conf-hook
   cat /etc/cryptsetup-initramfs/conf-hook
 }
 
 function configure_initramfs_tools() {
-  echo "[ update /etc/initramfs-tools/initramfs.conf ]"
+  echo "[ configure_initramfs_tools ]"
   cat <<EOD
 UMASK=0077
 COMPRESS=gzip
@@ -159,6 +169,7 @@ EOD
 }
 
 function configure_networking () {
+  echo "[ configure_networking  ]"
   ##FIXME: hostname
   local hostname=lua
   local domain=mathminds.io
@@ -176,6 +187,7 @@ function configure_networking () {
 }
 
 function install_desktops() {
+  echo "[ install_desktops ]"
   ##FIXME: desktop
   local desktop=kde-plasma-desktop
   apt update
@@ -186,6 +198,7 @@ function install_desktops() {
 }
 
 function install_mozilla_suite() {
+  echo "[ install_mozilla_suite ]"
   apt update
   ##FIXME: handle retries
   apt install -y firefox-esr thunderbird
@@ -194,6 +207,7 @@ function install_mozilla_suite() {
 }
 
 function install_office_suite() {
+  echo "[ install_office_suite ]"
   apt update
   ##FIXME: handle retries
   apt install -y libreoffice gimp okular
@@ -202,6 +216,7 @@ function install_office_suite() {
 }
 
 function install_printer_and_scanner() {
+  echo "[ install_printer_and_scanner ]"
   apt update
   ##FIXME: handle retries
   apt install -y cups printer-driver-cups-pdf system-config-printer skanlite xsane
@@ -209,9 +224,8 @@ function install_printer_and_scanner() {
   apt install -y cups printer-driver-cups-pdf system-config-printer skanlite xsane
 }
 
-
-
 function install_timeshift() {
+  echo "[ install_timeshift ]"
   apt update
   ##FIXME: handle retries
   apt install -y timeshift snapper-gui
@@ -220,6 +234,7 @@ function install_timeshift() {
 }
 
 function install_syncthing() {
+  echo "[ install_syncthing ]"
   apt update
   ##FIXME: handle retries
   apt install -y syncthing syncthing-discosrv syncthing-relaysrv syncthing-gtk
@@ -228,6 +243,7 @@ function install_syncthing() {
 }
 
 function install_utilities() {
+  echo "[ install_utilities ]"
   apt update
   # download managers
   apt install -y wget curl
@@ -242,6 +258,7 @@ function install_utilities() {
 }
 
 function enable_services() {
+  echo "[ enable_services ]"
   # openssh-server
   apt update
   ##FIXME: handle retries
@@ -252,12 +269,13 @@ function enable_services() {
 }
 
 function finish_installation() {
+  echo "[ finish_installation ]"
   snapper create --type single --description "Installation completed successfully" --userdata "important=yes"
   sync; sync; sync
 }
 
 
-function automated_install() {
+function automated_chroot() {
   setup_password_root
   setup_password_user
   install_locales
@@ -276,5 +294,5 @@ function automated_install() {
   install_printer_and_scanner
   install_utilities
   enable_services
-  umount_and_reboot
+  finish_installation
 }
