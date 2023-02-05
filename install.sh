@@ -104,6 +104,8 @@ function install_grub() {
 function grup_enable_cryptodisk() {
   fgrep 'GRUB_ENABLE_CRYPTODISK=yes' /etc/default/grub || sed '/GRUB_CMDLINE_LINUX_DEFAULT/i GRUB_ENABLE_CRYPTODISK=yes' -i /etc/default/grub
   sed 's/GRUB_ENABLE_CRYPTODISK=no/GRUB_ENABLE_CRYPTODISK=yes/' -i /etc/default/grub
+  # debugging
+  cat /etc/default/grub
 }
 
 
