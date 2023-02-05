@@ -32,7 +32,7 @@ function define_luks_passphrase() {
 
 function test_make_luks() {
   local passphrase=${1:-$(dd bs=1 count=32 if=/dev/urandom | base64)}
-  echo ${passphrase}
+  echo TEST_MAKE_LUKS ${passphrase}
 }
 
 
