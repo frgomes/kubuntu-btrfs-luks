@@ -52,10 +52,10 @@ function make_volumes() {
 function mount_volumes() {
   local options=,ssd,noatime,compress=zstd,space_cache=v2,commit=120
   # root (btrfs)
-  mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptoroot /mnt
+  mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
   mkdir -p /mnt/home /mnt/.snapshots
-  mount -t btrfs -o ${options},subvol=@home      /dev/mapper/cryptoroot /mnt/home
-  mount -t btrfs -o ${options},subvol=@snapshots /dev/mapper/cryptoroot /mnt/.snapshots
+  mount -t btrfs -o ${options},subvol=@home      /dev/mapper/cryptroot /mnt/home
+  mount -t btrfs -o ${options},subvol=@snapshots /dev/mapper/cryptroot /mnt/.snapshots
   # efi
   mkdir -p /mnt/boot/efi
   mount /mnt/${device}p1 /mnt/boot/efi
