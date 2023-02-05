@@ -2,7 +2,7 @@
 
 function setup_passwd_root() {
   local password=password
-  local confirm=wrong
+  local confirm=
   while [ "${password}" != "${confirm}" ] ;do
     echo -n "Enter password for root: "
     read -s password
@@ -16,15 +16,32 @@ function setup_passwd_root() {
 
 function setup_passwd_user() {
   local fullname="Debian"
-  echo -n "Enter full name of first user: "
+  local confirm=
+  while [ "${fullname}" != "${confirm}" ] ;do
+    echo -n "Enter full name for first user: "
+    read -s username
+    echo ""
+    echo -n "Confirm username for first user: "
+    read -s confirm
+    echo ""
+  done
+
+  echo -n "Enter full name for first user: "
   read fullname
 
-  local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]')
-  echo -n "Enter username of first user: "
-  read username
+  local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' | sed -E 's/[ \t]+//g')
+  local confirm=
+  while [ "${username}" != "${confirm}" ] ;do
+    echo -n "Enter username for user ${fullname}: "
+    read -s username
+    echo ""
+    echo -n "Confirm username for user ${fullname}: "
+    read -s confirm
+    echo ""
+  done
 
   local password=password
-  local confirm=wrong
+  local confirm=
   while [ "${password}" != "${confirm}" ] ;do
     echo -n "Enter password for ${username}: "
     read -s password
@@ -33,6 +50,8 @@ function setup_passwd_user() {
     read -s confirm
     echo ""
   done
+
+  useradd -m "${username}"
   echo -e "${password}\n${password}" | passwd ${username}
 }
 
