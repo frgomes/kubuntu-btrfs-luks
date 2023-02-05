@@ -148,6 +148,13 @@ function setup_chroot() {
   ls -al /mnt/tmp/chroot
 }
 
+function perform_installation() {
+  # run next step in a jail
+  local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+  local base=$(dirname ${dir})
+  echo chroot /mnt /tmp/${base}/post-install.sh
+}
+
 function umount_and_reboot() {
   echo "[ umount_and_reboot ]"
   echo "Please remove the installation media and press ENTER"
@@ -176,10 +183,8 @@ function automated_install() {
   update_sources
   echo -n "PRESS ENTER"; read -s dummy
   setup_chroot
-  # run next step in a jail
-  local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
-  local base=$(dirname ${dir})
-  echo chroot /mnt /tmp/${base}/post-install.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  perform_installation
   echo -n "PRESS ENTER"; read -s dummy
   # umount_and_reboot
 }
