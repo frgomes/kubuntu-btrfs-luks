@@ -125,9 +125,9 @@ function create_volume_unlock_keys() {
 
 function configure_crypttab() {
   local partition=/dev/nvme0n1p
-  fgrep cryptroot /etc/cryptswap || cat <<EOD >> /etc/cryptab
+  fgrep "${partition}" /etc/crypttab || cat <<EOD >> /etc/cryptab
 cryptswap ${partition}2 /boot/volume-swap.key luks,discard,key-slot=1
-cryptroot ${partition}2 /boot/volume-root.key luks,discard,key-slot=2
+cryptroot ${partition}4 /boot/volume-root.key luks,discard,key-slot=2
 EOD
 }
 
