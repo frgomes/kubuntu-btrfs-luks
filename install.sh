@@ -196,10 +196,20 @@ function install_mozilla_suite() {
 function install_office_suite() {
   apt update
   ##FIXME: handle retries
-  apt install -y libreoffice gimp okular skanlite cups printer-driver-cups-pdf system-config-printer
-  apt install -y libreoffice gimp okular skanlite cups printer-driver-cups-pdf system-config-printer
-  apt install -y libreoffice gimp okular skanlite cups printer-driver-cups-pdf system-config-printer
+  apt install -y libreoffice gimp okular
+  apt install -y libreoffice gimp okular
+  apt install -y libreoffice gimp okular
 }
+
+function install_printer_and_scanner() {
+  apt update
+  ##FIXME: handle retries
+  apt install -y cups printer-driver-cups-pdf system-config-printer skanlite xsane
+  apt install -y cups printer-driver-cups-pdf system-config-printer skanlite xsane
+  apt install -y cups printer-driver-cups-pdf system-config-printer skanlite xsane
+}
+
+
 
 function install_timeshift() {
   apt update
@@ -268,6 +278,7 @@ function automated_install() {
   install_desktops
   install_mozilla_suite
   install_office_suite
+  install_printer_and_scanner
   install_utilities
   enable_services
   umount_and_reboot
