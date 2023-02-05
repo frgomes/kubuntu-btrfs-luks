@@ -224,7 +224,7 @@ function install_utilities() {
   # text editors
   apt install -y zile emacs vim
   # source code management
-  apt install -y git gitk hg tortoisehg
+  apt install -y git gitk mercurial tortoisehg
   # password mamagers
   apt install -y keepassxc
   # package managers
