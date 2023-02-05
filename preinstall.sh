@@ -102,7 +102,6 @@ function setup_chroot() {
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   mkdir -p /mnt/tmp/chroot
   cp -pv ${dir}/*.sh /mnt/tmp/chroot
-  chroot /mnt /bin/bash
 }
 
 function automated_install() {
@@ -113,6 +112,6 @@ function automated_install() {
   mount_volumes
   install_debian
   update_sources
-  create_chroot
+  setup_chroot
   chroot /mnt /tmp/chroot/install.sh
 }
