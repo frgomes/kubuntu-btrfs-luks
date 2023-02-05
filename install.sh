@@ -143,6 +143,7 @@ function configure_initramfs_tools() {
   echo "[ update /etc/initramfs-tools/initramfs.conf ]"
   fgrep 'UMASK=0077' /etc/initramfs-tools/initramfs.conf > /dev/null || echo "UMASK=0077" > /etc/initramfs-tools/initramfs.conf
   cat /etc/initramfs-tools/initramfs.conf
+  update-initramfs -u
 }
 
 
