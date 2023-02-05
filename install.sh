@@ -11,7 +11,7 @@ function setup_passwd_root() {
     read -s confirm
     echo ""
   done
-  echo -e "${password}\n${password}" | passwd --quiet root
+  echo -e "${password}\n${password}" | passwd --quiet root > /dev/null
 }
 
 function setup_passwd_user() {
