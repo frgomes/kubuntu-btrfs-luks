@@ -11,7 +11,7 @@ function setup_passwd_root() {
     read -s confirm
     echo ""
   done
-  echo -e "${password}\n${passwork}" | passwd root
+  echo -e "${password}\n${password}" | passwd root
 }
 
 function setup_passwd_user() {
@@ -33,7 +33,7 @@ function setup_passwd_user() {
     read -s confirm
     echo ""
   done
-  echo -e "${password}\n${passwork}" | passwd ${username}
+  echo -e "${password}\n${password}" | passwd ${username}
 }
 
 function install_locales() {
