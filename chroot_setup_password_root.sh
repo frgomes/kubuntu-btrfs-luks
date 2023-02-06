@@ -13,7 +13,7 @@ function chroot_setup_password_root() {
     echo ""
   done
   echo -e "${password}\n${password}" | passwd --quiet root
-  ssh-keygen -b 4096 -t ed25519 -a 5 -f ~root/.ssh/id_ed25519 -N"${password}"
+  ##FIXME: ssh-keygen -b 4096 -t ed25519 -a 5 -f ~root/.ssh/id_ed25519 -N"${password}"
 }
 
 chroot_setup_password_root
