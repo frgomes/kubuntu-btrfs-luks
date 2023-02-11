@@ -2,68 +2,80 @@
 
 function define_keyboard() {
   echo "[ define_keyboard ]"
-  while
-    local keyboard=US
-    echo -n "Enter keyboard layout: "
-    read -i "${keyboard}" keyboard
-    [[ -z "${keyboard}" ]]
-  do true ;done
-  echo -n "${keyboard}" > /dev/shm/keyboard
+  if [[ ! -f /dev/shm/keyboard ]] ;then
+    while
+      local keyboard=US
+      echo -n "Enter keyboard layout: "
+      read -i "${keyboard}" keyboard
+      [[ -z "${keyboard}" ]]
+    do true ;done
+    echo -n "${keyboard}" > /dev/shm/keyboard
+  fi
 }
 
 function define_language() {
   echo "[ define_language ]"
-  while
-    local language=en
-    echo -n "Enter language: "
-    read -i "${language}" language
-    [[ -z "${language}" ]]
-  do true ;done
-  echo -n "${language}" > /dev/shm/language
+  if [[ ! -f /dev/shm/language ]] ;then
+    while
+      local language=en
+      echo -n "Enter language: "
+      read -i "${language}" language
+      [[ -z "${language}" ]]
+    do true ;done
+    echo -n "${language}" > /dev/shm/language
+  fi
 }
 
 function define_locale() {
   echo "[ define_locale ]"
-  while
-    local locale=en_US
-    echo -n "Enter locale: "
-    read -i "${locale}" locale
-    [[ -z "${locale}" ]]
-  do true ;done
-  echo -n "${locale}" > /dev/shm/locale
+  if [[ ! -f /dev/shm/locale ]] ;then
+    while
+      local locale=en_US
+      echo -n "Enter locale: "
+      read -i "${locale}" locale
+      [[ -z "${locale}" ]]
+    do true ;done
+    echo -n "${locale}" > /dev/shm/locale
+  fi
 }
 
 function define_timezone() {
   echo "[ define_timezone ]"
-  while
-    local timezone=en_US
-    echo -n "Enter timezone: "
-    read -i "${timezone}" timezone
-    [[ -z "${timezone}" ]]
-  do true ;done
-  echo -n "${timezone}" > /dev/shm/timezone
+  if [[ ! -f /dev/shm/timezone ]] ;then
+    while
+      local timezone=en_US
+      echo -n "Enter timezone: "
+      read -i "${timezone}" timezone
+      [[ -z "${timezone}" ]]
+    do true ;done
+    echo -n "${timezone}" > /dev/shm/timezone
+  fi
 }
 
 function define_hostname() {
   echo "[ define_hostname ]"
-  while
-    local hostname=en_US
-    echo -n "Enter hostname: "
-    read -i "${hostname}" hostname
-    [[ -z "${hostname}" ]]
-  do true ;done
-  echo -n "${hostname}" > /dev/shm/hostname
+  if [[ ! -f /dev/shm/hostname ]] ;then
+    while
+      local hostname=en_US
+      echo -n "Enter hostname: "
+      read -i "${hostname}" hostname
+      [[ -z "${hostname}" ]]
+    do true ;done
+    echo -n "${hostname}" > /dev/shm/hostname
+  fi
 }
 
 function define_domain() {
   echo "[ define_domain ]"
-  while
-    local domain=en_US
-    echo -n "Enter domain: "
-    read -i "${domain}" domain
-    [[ -z "${domain}" ]]
-  do true ;done
-  echo -n "${domain}" > /dev/shm/domain
+  if [[ ! -f /dev/shm/domain ]] ;then
+    while
+      local domain=en_US
+      echo -n "Enter domain: "
+      read -i "${domain}" domain
+      [[ -z "${domain}" ]]
+    do true ;done
+    echo -n "${domain}" > /dev/shm/domain
+  fi
 }
 
 function define_release() {
@@ -73,85 +85,95 @@ function define_release() {
 
 function define_mirror() {
   echo "[ define_mirror ]"
-  while
-    local mirror=en_US
-    echo -n "Enter network mirror: "
-    read -i "${mirror}" mirror
-    [[ -z "${mirror}" ]]
-  do true ;done
-  echo -n "${mirror}" > /dev/shm/mirror
+  if [[ ! -f /dev/shm/mirror ]] ;then
+    while
+      local mirror=en_US
+      echo -n "Enter network mirror: "
+      read -i "${mirror}" mirror
+      [[ -z "${mirror}" ]]
+    do true ;done
+    echo -n "${mirror}" > /dev/shm/mirror
+  fi
 }
 
 function define_device() {
   echo "[ define_device ]"
-  while
-    local device=/dev/nvme0n1
-    echo -n "Enter installation device: "
-    read -i "${device}" device
-    [[ -z "${device}" ]]
-  do true ;done
-  echo -n "${device}" > /dev/shm/device
+  if [[ ! -f /dev/shm/device ]] ;then
+    while
+      local device=/dev/nvme0n1
+      echo -n "Enter installation device: "
+      read -i "${device}" device
+      [[ -z "${device}" ]]
+    do true ;done
+    echo -n "${device}" > /dev/shm/device
+  fi
 }
 
 function define_luks_passphrase() {
   echo "[ define_luks_passphrase ]"
-  local passphrase=passphrase
-  local confirm=wrong
-  while [ -z "${passphrase}" -o \( "${passphrase}" != "${confirm}" \) ] ;do
-    echo -n "Enter passphrase for encrypted volume: "
-    read -s passphrase
-    echo ""
-    echo -n "Confirm passphrase for encrypted volume: "
-    read -s confirm
-    echo ""
-  done
-  echo -n "${passphrase}" > /dev/shm/luks_passphrase
+  if [[ ! -f /dev/shm/luks_passphrase ]] ;then
+    local passphrase=passphrase
+    local confirm=wrong
+    while [ -z "${passphrase}" -o \( "${passphrase}" != "${confirm}" \) ] ;do
+      echo -n "Enter passphrase for encrypted volume: "
+      read -s passphrase
+      echo ""
+      echo -n "Confirm passphrase for encrypted volume: "
+      read -s confirm
+      echo ""
+    done
+    echo -n "${passphrase}" > /dev/shm/luks_passphrase
+  fi
 }
 
 function define_root_password() {
   echo "[ define_root_password ]"
-  local password=password
-  local confirm=wrong
-  while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
-    echo -n "Enter password for root: "
-    read -s password
-    echo ""
-    echo -n "Confirm password for root: "
-    read -s confirm
-    echo ""
-  done
-  echo -n "${password}" > /dev/shm/root_password
+  if [[ ! -f /dev/shm/root_password ]] ;then
+    local password=password
+    local confirm=wrong
+    while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
+      echo -n "Enter password for root: "
+      read -s password
+      echo ""
+      echo -n "Confirm password for root: "
+      read -s confirm
+      echo ""
+    done
+    echo -n "${password}" > /dev/shm/root_password
+  fi
 }
 
 function define_user_password() {
   echo "[ define_user_password ]"
-  local fullname=""
-  while [ -z "${fullname}" ] ;do
-    echo -n "Enter full name for first user: "
-    read fullname
-  done
+  if [[ ! -f /dev/shm/user_password ]] ;then
+    local fullname=""
+    while [ -z "${fullname}" ] ;do
+      echo -n "Enter full name for first user: "
+      read fullname
+    done
 
-  while
-    local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' | sed -E 's/[ \t]+//g')
-    echo -n "Enter username for user ${fullname}: "
-    read -i "${username}" username
-    [[ -z "${username}" ]]
-  do true ;done
+    while
+      local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' | sed -E 's/[ \t]+//g')
+      echo -n "Enter username for user ${fullname}: "
+      read -i "${username}" username
+      [[ -z "${username}" ]]
+    do true ;done
 
-  local password=password
-  local confirm=
-  while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
-    echo -n "Enter password for ${username}: "
-    read -s password
-    echo ""
-    echo -n "Confirm password for ${username}: "
-    read -s confirm
-    echo ""
-  done
+    local password=password
+    local confirm=
+    while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
+      echo -n "Enter password for ${username}: "
+      read -s password
+      echo ""
+      echo -n "Confirm password for ${username}: "
+      read -s confirm
+      echo ""
+    done
 
-  echo -n "${fullname}" > /dev/shm/user_fullname
-  echo -n "${username}" > /dev/shm/user_username
-  echo -n "${password}" > /dev/shm/user_password
+    echo -n "${fullname}" > /dev/shm/user_fullname
+    echo -n "${username}" > /dev/shm/user_username
+    echo -n "${password}" > /dev/shm/user_password
+  fi
 }
 
 
@@ -302,7 +324,6 @@ function automated_install() {
   define_luks_passphrase
   define_root_password
   define_user_password
-  echo -n "PRESS ENTER"; read -s dummy
 
   # make_partitions "${passphrase}"
   # echo -n "PRESS ENTER"; read -s dummy
