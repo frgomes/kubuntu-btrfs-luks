@@ -390,5 +390,8 @@ function automated_install() {
   chroot /mnt /tmp/chroot/chroot_finish_installation.sh
   echo -n "PRESS ENTER"; read -s dummy
 
-  # umount_and_reboot
+  umount_and_reboot
 }
+
+
+automated_install
