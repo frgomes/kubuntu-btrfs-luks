@@ -326,7 +326,7 @@ function automated_install() {
   define_root_password
   define_user_password
 
-  make_partitions "${passphrase}"
+  make_partitions
   echo -n "PRESS ENTER"; read -s dummy
   define_luks_passphrase
   echo -n "PRESS ENTER"; read -s dummy
