@@ -4,11 +4,11 @@ function chroot_create_fstab() {
   echo "[ create_fstab ]"
   local device="$(cat /dev/shm/device)"
   local partition="${device}"p
-  local uuid_efi=$(blkid | fgrep ${partition}1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
+  local uuid_efi=$(blkid  | fgrep ${partition}1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
   local uuid_swap=$(blkid | fgrep ${partition}2 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
   local uuid_boot=$(blkid | fgrep ${partition}3 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
   local uuid_root=$(blkid | fgrep ${partition}4 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
-  cat /proc/mounts | grep -E "^/dev/mapper/|^tmpfs|^${partition}" | \
+  cat /proc/mounts | grep -v -E '^tmpfs' | grep -E "^/dev/mapper/|^${partition}" | \
     sed -E "s|^/dev/mapper/cryptroot|${uuid_root}|" | \
     sed -E "s|^tmpfs|${uuid_root}|" | \
     sed -E "s|/ btrfs|/           btrfs|" | \
