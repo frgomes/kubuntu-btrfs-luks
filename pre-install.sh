@@ -141,14 +141,13 @@ function setup_chroot() {
   # copy scripts
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   mkdir -p /mnt/tmp
+}
 
+function deploy_chroot_scripts() {
   cp -rp ${dir} /mnt/tmp
   mv /mnt/tmp/kubuntu-btrfs-luks /mnt/tmp/chroot
   echo "[ /mnt/tmp/chroot ]"
   ls /mnt/tmp/chroot
-  ### perform installation
-  ##chroot /mnt /tmp/chroot/post-install.sh
-  ##echo -n "PRESS ENTER"; read -s dummy
 }
 
 function umount_and_reboot() {
@@ -468,8 +467,12 @@ function automated_install() {
 #  setup_chroot
 #  echo -n "PRESS ENTER"; read -s dummy
 
-#  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-#  echo -n "PRESS ENTER"; read -s dummy
+  # deploy scripts which should run in a chroot jail
+  desploy_chroot_scripts
+  echo -n "PRESS ENTER"; read -s dummy
+
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
 
   chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
   echo -n "PRESS ENTER"; read -s dummy
