@@ -3,7 +3,7 @@
 function chroot_install_locales() {
   echo "[ install_locales ]"
   local layout=gb
-  local lang=en_GB
+  local lang=en_US
   # define default keyboard configuration
   cat <<EOD > /etc/default/keyboard
 # KEYBOARD CONFIGURATION FILE
