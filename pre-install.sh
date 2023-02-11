@@ -326,25 +326,25 @@ function automated_install() {
   define_root_password
   define_user_password
 
-  # make_partitions "${passphrase}"
-  # echo -n "PRESS ENTER"; read -s dummy
-  # define_luks_passphrase
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_luks
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_filesystems
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_volumes
-  # echo -n "PRESS ENTER"; read -s dummy
-  # mount_volumes
-  # echo -n "PRESS ENTER"; read -s dummy
-  # install_debian
-  # echo -n "PRESS ENTER"; read -s dummy
-  # update_sources
-  # echo -n "PRESS ENTER"; read -s dummy
-  #
-  # setup_chroot
-  # echo -n "PRESS ENTER"; read -s dummy
+  make_partitions "${passphrase}"
+  echo -n "PRESS ENTER"; read -s dummy
+  define_luks_passphrase
+  echo -n "PRESS ENTER"; read -s dummy
+  make_luks
+  echo -n "PRESS ENTER"; read -s dummy
+  make_filesystems
+  echo -n "PRESS ENTER"; read -s dummy
+  make_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  mount_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  install_debian
+  echo -n "PRESS ENTER"; read -s dummy
+  update_sources
+  echo -n "PRESS ENTER"; read -s dummy
+
+  setup_chroot
+  echo -n "PRESS ENTER"; read -s dummy
 
   deploy_chroot_scripts
   echo -n "PRESS ENTER"; read -s dummy
