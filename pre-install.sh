@@ -321,6 +321,7 @@ function automated_install() {
   define_domain
   define_release
   define_mirror
+  define_device
   define_luks_passphrase
   define_root_password
   define_user_password
