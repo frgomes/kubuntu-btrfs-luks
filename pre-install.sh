@@ -138,12 +138,11 @@ function setup_chroot() {
   # configure chroot environment
   for dir in sys dev proc ;do mount --rbind /${dir} /mnt/${dir} && mount --make-rslave /mnt/${dir} ;done
   cp /etc/resolv.conf /mnt/etc
-  # copy scripts
-  local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
-  mkdir -p /mnt/tmp
 }
 
 function deploy_chroot_scripts() {
+  local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+  mkdir -p /mnt/tmp
   cp -rp ${dir} /mnt/tmp
   mv /mnt/tmp/kubuntu-btrfs-luks /mnt/tmp/chroot
   echo "[ /mnt/tmp/chroot ]"
