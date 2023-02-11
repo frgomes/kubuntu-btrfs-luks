@@ -367,6 +367,8 @@ function automated_install() {
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
   echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
+  echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
