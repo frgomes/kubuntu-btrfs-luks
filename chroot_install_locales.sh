@@ -20,7 +20,7 @@ EOD
   apt update
   apt install -y locales
   locale-gen "${language}.UTF-8"
-  update-locale "LANG=${language}.UTF-8"
+  update-locale "LC_ALL=${language}.UTF-8"
   locale-gen --purge "${language}.UTF-8"
 }
 
