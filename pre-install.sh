@@ -141,6 +141,7 @@ function setup_chroot() {
 }
 
 function deploy_chroot_scripts() {
+  [[ -d /mnt/tmp/chroot ]] || rm -r -f /mnt/tmp/chroot
   local dir=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
   mkdir -p /mnt/tmp
   cp -rp ${dir} /mnt/tmp
