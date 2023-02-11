@@ -19,9 +19,9 @@ EOD
   # define default locale configuration
   apt update
   apt install -y locales
-  update-locale "LANG=${lang}.UTF-8"
-  locale-gen --purge "${lang}.UTF-8"
+  locale-gen "${lang}.UTF-8"
   dpkg-reconfigure --frontend noninteractive locales
+  update-locale "LANG=${lang}.UTF-8"
 }
 
 chroot_install_locales

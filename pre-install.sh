@@ -186,11 +186,10 @@ function automated_install() {
   deploy_chroot_scripts
   echo -n "PRESS ENTER"; read -s dummy
 
-  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-  echo -n "PRESS ENTER"; read -s dummy
-
-  chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
-  echo -n "PRESS ENTER"; read -s dummy
+  #chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  #echo -n "PRESS ENTER"; read -s dummy
+  #chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
+  #echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_locales.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
