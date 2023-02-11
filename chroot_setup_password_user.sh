@@ -29,7 +29,6 @@ function chroot_setup_password_user() {
   useradd -m "${username}"
   echo -e "${password}
 ${password}" | passwd --quiet ${username}
-  ##FIXME: ssh-keygen -b 4096 -t ed25519 -a 5 -f ~${username}/.ssh/id_ed25519 -N"${password}"
 }
 
 chroot_setup_password_user
