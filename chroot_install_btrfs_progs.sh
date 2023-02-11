@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_install_btrfs_progs() {
   echo "[ install_btrfs_progs ]"
   apt update
@@ -6,3 +8,5 @@ function chroot_install_btrfs_progs() {
   apt install -y btrfs-progs cryptsetup snapper
   apt install -y btrfs-progs cryptsetup snapper
 }
+
+chroot_install_btrfs_progs

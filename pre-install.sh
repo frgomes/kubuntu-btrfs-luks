@@ -465,51 +465,48 @@ function automated_install() {
 #  echo -n "PRESS ENTER"; read -s dummy
 
 
-  setup_chroot
+#  setup_chroot
+#  echo -n "PRESS ENTER"; read -s dummy
+
+#  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+#  echo -n "PRESS ENTER"; read -s dummy
+
+  chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
   echo -n "PRESS ENTER"; read -s dummy
-
- #chroot /mnt ./chroot_setup_password_root.sh
-  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  chroot /mnt /tmp/chroot/chroot_install_locales.sh
   echo -n "PRESS ENTER"; read -s dummy
-
-
-
-  # chroot /mnt ./chroot_setup_password_user.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_locales.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_btrfs_progs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_kernel.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_create_fstab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_grub.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_grub_enable_cryptodisk.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_configure_crypttab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_configure_initramfs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_configure_initramfs_tools.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_configure_networking.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_desktops.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_mozilla_suite.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_office_suite.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_printer_and_scanner.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_install_utilities.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_enable_services.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt ./chroot_finish_installation.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_kernel.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_fstab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_grub.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_networking.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_desktops.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_utilities.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_enable_services.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_finish_installation.sh
+  echo -n "PRESS ENTER"; read -s dummy
 
   # umount_and_reboot
 }

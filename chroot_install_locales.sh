@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_install_locales() {
   echo "[ install_locales ]"
   local layout=gb
@@ -21,3 +23,5 @@ EOD
   locale-gen --purge "${lang}.UTF-8"
   dpkg-reconfigure --frontend noninteractive locales
 }
+
+chroot_install_locales

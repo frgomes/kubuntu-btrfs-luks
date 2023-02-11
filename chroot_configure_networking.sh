@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_configure_networking () {
   echo "[ configure_networking  ]"
   ##FIXME: hostname
@@ -15,3 +17,5 @@ function chroot_configure_networking () {
   systemctl enable NetworkManager dbus
   update-grub
 }
+
+chroot_configure_networking

@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_create_volume_unlock_keys() {
   echo "[ create_volume_unlock_keys ]"
   local partition=/dev/nvme0n1p
@@ -10,3 +12,5 @@ function chroot_create_volume_unlock_keys() {
   chmod 000 /boot/volume-root.key
   chmod -R g-rwx,o-rwx /boot
 }
+
+chroot_create_volume_unlock_keys

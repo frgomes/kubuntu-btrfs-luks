@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_install_utilities() {
   echo "[ install_utilities ]"
   apt update
@@ -12,3 +14,5 @@ function chroot_install_utilities() {
   # package managers
   apt install -y flatpak
 }
+
+chroot_install_utilities

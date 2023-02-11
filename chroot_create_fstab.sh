@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_create_fstab() {
   echo "[ create_fstab ]"
   local partition=/dev/nvme0n1p
@@ -16,3 +18,5 @@ function chroot_create_fstab() {
   # debugging
   cat /etc/fstab
 }
+
+chroot_create_fstab

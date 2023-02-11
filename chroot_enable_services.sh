@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_enable_services() {
   echo "[ enable_services ]"
   # openssh-server
@@ -8,3 +10,5 @@ function chroot_enable_services() {
   apt install -y openssh-server fail2ban
   systemctl enable sshd
 }
+
+chroot_enable_services

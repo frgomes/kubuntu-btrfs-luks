@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_configure_crypttab() {
   echo "[ configure_crypttab ]"
   local partition=/dev/nvme0n1p
@@ -8,3 +10,5 @@ EOD
   # debugging
   cat /etc/crypttab
 }
+
+chroot_configure_crypttab

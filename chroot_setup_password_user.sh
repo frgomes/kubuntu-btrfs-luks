@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_setup_password_user() {
   echo "[ setup_passwd_user ]"
   local fullname=""
@@ -25,6 +27,9 @@ function chroot_setup_password_user() {
   done
 
   useradd -m "${username}"
-  echo -e "${password}\n${password}" | passwd --quiet ${username}
+  echo -e "${password}
+${password}" | passwd --quiet ${username}
   ##FIXME: ssh-keygen -b 4096 -t ed25519 -a 5 -f ~${username}/.ssh/id_ed25519 -N"${password}"
 }
+
+chroot_setup_password_user

@@ -1,3 +1,5 @@
+#!/bin/bash -eux
+
 function chroot_configure_initramfs_tools() {
   echo "[ configure_initramfs_tools ]"
   cat <<EOD
@@ -10,3 +12,5 @@ EOD
   stat -Lc "%A %n" /initrd.img
   lsinitramfs /initrd.img | grep -E "^crypt"
 }
+
+chroot_configure_initramfs_tools
