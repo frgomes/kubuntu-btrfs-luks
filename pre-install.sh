@@ -26,19 +26,6 @@ function define_language() {
   fi
 }
 
-function define_locale() {
-  echo "[ define_locale ]"
-  if [[ ! -f /dev/shm/locale ]] ;then
-    while
-      local locale=en_US
-      echo -n "Enter locale: "
-      read -i "${locale}" locale
-      [[ -z "${locale}" ]]
-    do true ;done
-    echo -n "${locale}" > /dev/shm/locale
-  fi
-}
-
 function define_timezone() {
   echo "[ define_timezone ]"
   if [[ ! -f /dev/shm/timezone ]] ;then
@@ -315,7 +302,6 @@ function umount_and_reboot() {
 function automated_install() {
   define_keyboard
   define_language
-  define_locale
   define_timezone
   define_hostname
   define_domain
