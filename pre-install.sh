@@ -468,7 +468,7 @@ function automated_install() {
 #  echo -n "PRESS ENTER"; read -s dummy
 
   # deploy scripts which should run in a chroot jail
-  desploy_chroot_scripts
+  deploy_chroot_scripts
   echo -n "PRESS ENTER"; read -s dummy
 
   chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
