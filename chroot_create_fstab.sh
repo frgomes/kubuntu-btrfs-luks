@@ -2,7 +2,8 @@
 
 function chroot_create_fstab() {
   echo "[ create_fstab ]"
-  local partition=/dev/nvme0n1p
+  local device="$(cat /dev/shm/device)"
+  local partition="${device}"p
   local uuid_efi=$(blkid | fgrep ${partition}1 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
   local uuid_swap=$(blkid | fgrep ${partition}2 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')
   local uuid_boot=$(blkid | fgrep ${partition}3 | cut -d' ' -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]')

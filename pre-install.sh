@@ -1,30 +1,96 @@
 #!/bin/bash -eux
 
-##FIXME: collect parameters at startup
-# passphrase
-# keyboard
-# language
-# locales
-# timezone
-# hostname
-# domain
-# network mirror
-# root passwd
-# fullname
-# username
-# user passwd
-# desktops=kde
+function define_keyboard() {
+  echo "[ define_keyboard ]"
+  while
+    local keyboard=US
+    echo -n "Enter keyboard layout: "
+    read -i "${keyboard}" keyboard
+    [[ -z "${keyboard}" ]]
+  do true ;done
+  echo -n "${keyboard}" > /dev/shm/keyboard
+}
 
-function make_partitions() {
-  echo "[ make_partitions ]"
-  local drive=/dev/nvme0n1
-  ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
-  parted -s ${drive} -- mklabel gpt
-  parted -s ${drive} -- mkpart primary 1MiB 513MiB
-  parted -s ${drive} -- mkpart primary 513MiB 16897MiB
-  parted -s ${drive} -- mkpart primary 16897MiB 18495MiB
-  parted -s ${drive} -- mkpart primary 18495MiB -64KiB
-  parted -s ${drive} -- print
+function define_language() {
+  echo "[ define_language ]"
+  while
+    local language=en
+    echo -n "Enter language: "
+    read -i "${language}" language
+    [[ -z "${language}" ]]
+  do true ;done
+  echo -n "${language}" > /dev/shm/language
+}
+
+function define_locale() {
+  echo "[ define_locale ]"
+  while
+    local locale=en_US
+    echo -n "Enter locale: "
+    read -i "${locale}" locale
+    [[ -z "${locale}" ]]
+  do true ;done
+  echo -n "${locale}" > /dev/shm/locale
+}
+
+function define_timezone() {
+  echo "[ define_timezone ]"
+  while
+    local timezone=en_US
+    echo -n "Enter timezone: "
+    read -i "${timezone}" timezone
+    [[ -z "${timezone}" ]]
+  do true ;done
+  echo -n "${timezone}" > /dev/shm/timezone
+}
+
+function define_hostname() {
+  echo "[ define_hostname ]"
+  while
+    local hostname=en_US
+    echo -n "Enter hostname: "
+    read -i "${hostname}" hostname
+    [[ -z "${hostname}" ]]
+  do true ;done
+  echo -n "${hostname}" > /dev/shm/hostname
+}
+
+function define_domain() {
+  echo "[ define_domain ]"
+  while
+    local domain=en_US
+    echo -n "Enter domain: "
+    read -i "${domain}" domain
+    [[ -z "${domain}" ]]
+  do true ;done
+  echo -n "${domain}" > /dev/shm/domain
+}
+
+function define_release() {
+  local release=bullseye
+  echo -n "${release}" > /dev/shm/release
+}
+
+function define_mirror() {
+  echo "[ define_mirror ]"
+  while
+    local mirror=en_US
+    echo -n "Enter network mirror: "
+    read -i "${mirror}" mirror
+    [[ -z "${mirror}" ]]
+  do true ;done
+  echo -n "${mirror}" > /dev/shm/mirror
+}
+
+function define_device() {
+  echo "[ define_device ]"
+  while
+    local device=/dev/nvme0n1
+    echo -n "Enter installation device: "
+    read -i "${device}" device
+    [[ -z "${device}" ]]
+  do true ;done
+  echo -n "${device}" > /dev/shm/device
 }
 
 function define_luks_passphrase() {
@@ -42,9 +108,69 @@ function define_luks_passphrase() {
   echo -n "${passphrase}" > /dev/shm/luks_passphrase
 }
 
+function define_root_password() {
+  echo "[ define_root_password ]"
+  local password=password
+  local confirm=wrong
+  while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
+    echo -n "Enter password for root: "
+    read -s password
+    echo ""
+    echo -n "Confirm password for root: "
+    read -s confirm
+    echo ""
+  done
+  echo -n "${password}" > /dev/shm/root_password
+}
+
+function define_user_password() {
+  echo "[ define_user_password ]"
+  local fullname=""
+  while [ -z "${fullname}" ] ;do
+    echo -n "Enter full name for first user: "
+    read fullname
+  done
+
+  while
+    local username=$(echo "${fullname}" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]' | sed -E 's/[ \t]+//g')
+    echo -n "Enter username for user ${fullname}: "
+    read -i "${username}" username
+    [[ -z "${username}" ]]
+  do true ;done
+
+  local password=password
+  local confirm=
+  while [ -z "${password}" -o \( "${password}" != "${confirm}" \) ] ;do
+    echo -n "Enter password for ${username}: "
+    read -s password
+    echo ""
+    echo -n "Confirm password for ${username}: "
+    read -s confirm
+    echo ""
+  done
+
+  echo -n "${fullname}" > /dev/shm/user_fullname
+  echo -n "${username}" > /dev/shm/user_username
+  echo -n "${password}" > /dev/shm/user_password
+}
+
+
+function make_partitions() {
+  echo "[ make_partitions ]"
+  local device="$(cat /dev/shm/device)"
+  ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
+  parted -s ${device} -- mklabel gpt
+  parted -s ${device} -- mkpart primary 1MiB 513MiB
+  parted -s ${device} -- mkpart primary 513MiB 16897MiB
+  parted -s ${device} -- mkpart primary 16897MiB 18495MiB
+  parted -s ${device} -- mkpart primary 18495MiB -64KiB
+  parted -s ${device} -- print
+}
+
 function make_luks() {
   echo "[ make_luks ]"
-  local partition=/dev/nvme0n1p
+  local device="$(cat /dev/shm/device)"
+  local partition="${device}"p
   local passphrase="$(cat /dev/shm/luks_passphrase)"
   # swap
   echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}2 -
@@ -58,7 +184,8 @@ function make_luks() {
 
 function make_filesystems() {
   echo "[ make_filesystems ]"
-  local partition=/dev/nvme0n1p
+  local device="$(cat /dev/shm/device)"
+  local partition="${device}"p
   # efi
   mkfs.vfat ${partition}1
   # swap
@@ -81,7 +208,8 @@ function make_volumes() {
 
 function mount_volumes() {
   echo "[ mount_volumes ]"
-  local partition=/dev/nvme0n1p
+  local device="$(cat /dev/shm/device)"
+  local partition="${device}"p
   local options=,ssd,noatime,compress=zstd,space_cache=v2,commit=120
   # root (btrfs)
   mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
@@ -97,33 +225,33 @@ function mount_volumes() {
 
 function install_debian() {
   echo "[ install_debian ]"
-  local character=bullseye
+  local release="$(cat /dev/shm/release)"
   apt update
   apt install -y debootstrap
   ##FIXME: retry on network errors
-  debootstrap --download-only ${character} /mnt
-  debootstrap --download-only ${character} /mnt
-  debootstrap --download-only ${character} /mnt
-  debootstrap --download-only ${character} /mnt
-  debootstrap ${character} /mnt
+  debootstrap --download-only ${release} /mnt
+  debootstrap --download-only ${release} /mnt
+  debootstrap --download-only ${release} /mnt
+  debootstrap --download-only ${release} /mnt
+  debootstrap ${release} /mnt
 }
 
 function update_sources() {
   echo "[ update_sources ]"
-  local character=bullseye
+  local release="$(cat /dev/shm/release)"
   cat <<EOD > /mnt/etc/apt/sources.list
-deb     http://deb.debian.org/debian ${character} main contrib non-free
-deb-src http://deb.debian.org/debian ${character} main contrib non-free
+deb     http://deb.debian.org/debian ${release} main contrib non-free
+deb-src http://deb.debian.org/debian ${release} main contrib non-free
 
-deb     http://deb.debian.org/debian-security/ ${character}-security main contrib non-free
-deb-src http://deb.debian.org/debian-security/ ${character}-security main contrib non-free
+deb     http://deb.debian.org/debian-security/ ${release}-security main contrib non-free
+deb-src http://deb.debian.org/debian-security/ ${release}-security main contrib non-free
 
-deb     http://deb.debian.org/debian ${character}-updates main contrib non-free
-deb-src http://deb.debian.org/debian ${character}-updates main contrib non-free
+deb     http://deb.debian.org/debian ${release}-updates main contrib non-free
+deb-src http://deb.debian.org/debian ${release}-updates main contrib non-free
 
 ### backports
-# deb     http://deb.debian.org/debian ${character}-backports main contrib non-free
-# deb-src http://deb.debian.org/debian ${character}-backports main contrib non-free
+# deb     http://deb.debian.org/debian ${release}-backports main contrib non-free
+# deb-src http://deb.debian.org/debian ${release}-backports main contrib non-free
 
 ### unstable
 # deb     http://deb.debian.org/debian/ unstable main
@@ -163,35 +291,46 @@ function umount_and_reboot() {
 ###  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function automated_install() {
-#  make_partitions "${passphrase}"
-#  echo -n "PRESS ENTER"; read -s dummy
-#  define_luks_passphrase
-#  echo -n "PRESS ENTER"; read -s dummy
-#  make_luks
-#  echo -n "PRESS ENTER"; read -s dummy
-#  make_filesystems
-#  echo -n "PRESS ENTER"; read -s dummy
-#  make_volumes
-#  echo -n "PRESS ENTER"; read -s dummy
-#  mount_volumes
-#  echo -n "PRESS ENTER"; read -s dummy
-#  install_debian
-#  echo -n "PRESS ENTER"; read -s dummy
-#  update_sources
-#  echo -n "PRESS ENTER"; read -s dummy
+  define_keyboard
+  define_language
+  define_locale
+  define_timezone
+  define_hostname
+  define_domain
+  define_release
+  define_mirror
+  define_luks_passphrase
+  define_root_password
+  define_user_password
+  echo -n "PRESS ENTER"; read -s dummy
 
+  make_partitions "${passphrase}"
+  echo -n "PRESS ENTER"; read -s dummy
+  define_luks_passphrase
+  echo -n "PRESS ENTER"; read -s dummy
+  make_luks
+  echo -n "PRESS ENTER"; read -s dummy
+  make_filesystems
+  echo -n "PRESS ENTER"; read -s dummy
+  make_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  mount_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  install_debian
+  echo -n "PRESS ENTER"; read -s dummy
+  update_sources
+  echo -n "PRESS ENTER"; read -s dummy
 
-#  setup_chroot
-#  echo -n "PRESS ENTER"; read -s dummy
+  setup_chroot
+  echo -n "PRESS ENTER"; read -s dummy
 
-  # deploy scripts which should run in a chroot jail
   deploy_chroot_scripts
   echo -n "PRESS ENTER"; read -s dummy
 
-  #chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-  #echo -n "PRESS ENTER"; read -s dummy
-  #chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
-  #echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
+  echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_locales.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh

@@ -2,7 +2,7 @@
 
 function chroot_install_desktops() {
   echo "[ install_desktops ]"
-  ##FIXME: desktop
+  ##FIXME: allow selection of desired desktop(s)
   local desktop=kde-plasma-desktop
   apt update
   ##FIXME: handle retries
