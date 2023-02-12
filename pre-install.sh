@@ -288,12 +288,12 @@ define_root_password
 define_user_password
 
 if [[ ! -f /dev/shm/done_step1 ]] ;then
-  make_partitions
-  echo -n "PRESS ENTER"; read -s dummy
-  make_filesystems
-  echo -n "PRESS ENTER"; read -s dummy
-  make_btrfs_volumes
-  echo -n "PRESS ENTER"; read -s dummy
+  # make_partitions
+  # echo -n "PRESS ENTER"; read -s dummy
+  # make_filesystems
+  # echo -n "PRESS ENTER"; read -s dummy
+  # make_btrfs_volumes
+  # echo -n "PRESS ENTER"; read -s dummy
   mount_volumes
   echo -n "PRESS ENTER"; read -s dummy
   touch /dev/shm/done_step1
