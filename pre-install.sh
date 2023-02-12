@@ -154,20 +154,20 @@ function make_partitions() {
   echo "[ make_partitions ]"
   local device="$(cat /dev/shm/device)"
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
-  sgdisk -o ${device}
+  sgdisk -o               ${device}
   sgdisk -n 1:1MiB:513MiB ${device}
-  sgdisk -t 1:0f00        ${device}
-  sgdisk -c 1:efi         ${device}
   sgdisk -n 2:0:+16GiB    ${device}
-  sgdisk -t 2:8200        ${device}
-  sgdisk -c 2:swap        ${device}
   sgdisk -n 3:0:+2GiB     ${device}
-  sgdisk -t 3:8300        ${device}
-  sgdisk -c 3:boot        ${device}
   sgdisk -n 4:0:-64KiB    ${device}
+  sgdisk -t 1:0f00        ${device}
+  sgdisk -t 2:8200        ${device}
+  sgdisk -t 3:8300        ${device}
   sgdisk -t 4:8300        ${device}
+  sgdisk -c 1:efi         ${device}
+  sgdisk -c 2:swap        ${device}
+  sgdisk -c 3:boot        ${device}
   sgdisk -c 4:btrfs       ${device}
-  sgdisk -p ${device}
+  sgdisk -p               ${device}
 
   ##XXX parted -s ${device} -- mklabel gpt
   ##XXX parted -s ${device} -- mkpart primary 1MiB 513MiB
