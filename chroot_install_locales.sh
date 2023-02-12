@@ -16,7 +16,6 @@ XKBVARIANT=""
 XKBOPTIONS="grp:alt_shift_toggle"
 BACKSPACE="guess"
 EOD
-  dpkg-reconfigure --frontend=noninteractive keyboard-configuration
 
   apt update
   apt install -y locales
