@@ -1,6 +1,7 @@
 #!/bin/bash -eu
 
 function chroot_setup_password_root() {
+  echo "[ setup_password_root ]"
   local password="$(cat /dev/shm/root_password)"
   echo "root:${password}" | chpasswd
 }
