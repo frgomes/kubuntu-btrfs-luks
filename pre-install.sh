@@ -81,7 +81,7 @@ function define_mirror() {
   echo "[ define_mirror ]"
   if [[ ! -f /dev/shm/mirror ]] ;then
     while
-      local mirror=uk.debian.org
+      local mirror=deb.debian.org
       read -e -i "${mirror}" -p "Enter mirror: " mirror
       [[ -z "${mirror}" ]]
     do true ;done
