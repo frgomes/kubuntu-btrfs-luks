@@ -218,16 +218,16 @@ function mount_volumes() {
   local partition="${device}"p
   ##XXX local options=,ssd,noatime,compress=lzo,space_cache=v2,commit=120
   local options=,ssd,noatime,compress=lzo,space_cache=v2,commit=120
-  # root (btrfs)
+  # create directories for later mounting the volumes
   if (mount | grep /mnt) ;then umount /mnt ;fi
   mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
-  mkdir -p /mnt/home /mnt/.snapshots
+  mkdir -p /mnt/home /mnt/.snapshots /mnt/boot
   mount -t btrfs -o ${options},subvol=@home      /dev/mapper/cryptroot /mnt/home
   mount -t btrfs -o ${options},subvol=@snapshots /dev/mapper/cryptroot /mnt/.snapshots
   # boot
-  mkdir -p /mnt/boot/efi
   mount ${partition}3 /mnt/boot
   # efi
+  mkdir -p /mnt/boot/efi
   mount ${partition}1 /mnt/boot/efi
   # swap
   swapon /dev/mapper/cryptswap
