@@ -155,14 +155,18 @@ function make_partitions() {
   local device="$(cat /dev/shm/device)"
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
   sgdisk -o ${device}
-  sgdisk -n 1:1MiB:513MiB       ${device}
-  sgdisk -c 1:efi               ${device}
-  sgdisk -n 2:0:+16GiB          ${device}
-  sgdisk -c 2:swap              ${device}
-  sgdisk -n 3:0:+2GiB           ${device}
-  sgdisk -c 3:boot              ${device}
-  sgdisk -n 4:0:-64KiB          ${device}
-  sgdisk -c 4:btrfs             ${device}
+  sgdisk -n 1:1MiB:513MiB ${device}
+  sgdisk -t 1:0f00        ${device}
+  sgdisk -c 1:efi         ${device}
+  sgdisk -n 2:0:+16GiB    ${device}
+  sgdisk -t 2:8200        ${device}
+  sgdisk -c 2:swap        ${device}
+  sgdisk -n 3:0:+2GiB     ${device}
+  sgdisk -t 3:8300        ${device}
+  sgdisk -c 3:boot        ${device}
+  sgdisk -n 4:0:-64KiB    ${device}
+  sgdisk -t 4:8300        ${device}
+  sgdisk -c 4:btrfs       ${device}
   sgdisk -p ${device}
 
   ##XXX parted -s ${device} -- mklabel gpt
@@ -179,11 +183,11 @@ function make_luks() {
   local partition="${device}"p
   local passphrase="$(cat /dev/shm/luks_passphrase)"
   # swap
-  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}2 -
-  echo -n "${passphrase}" | cryptsetup luksOpen ${partition}2 cryptswap -
+  echo "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}2 -
+  echo "${passphrase}" | cryptsetup luksOpen ${partition}2 cryptswap -
   # root (btrfs)
-  echo -n "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}4 -
-  echo -n "${passphrase}" | cryptsetup luksOpen ${partition}4 cryptroot -
+  echo "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}4 -
+  echo "${passphrase}" | cryptsetup luksOpen ${partition}4 cryptroot -
   # debugging
   lsblk
 }
