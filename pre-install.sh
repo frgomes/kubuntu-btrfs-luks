@@ -184,11 +184,11 @@ function make_luks() {
   local partition="${device}"p
   local passphrase="$(cat /dev/shm/luks_passphrase)"
   # swap
-  echo "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}2 -
-  echo "${passphrase}" | cryptsetup luksOpen ${partition}2 cryptswap -
+  echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}2
+  echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}2 cryptswap
   # root (btrfs)
-  echo "${passphrase}" | cryptsetup luksFormat --type=luks2 ${partition}4 -
-  echo "${passphrase}" | cryptsetup luksOpen ${partition}4 cryptroot -
+  echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}4
+  echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}4 cryptroot
   # debugging
   lsblk
 }
