@@ -14,6 +14,7 @@ function chroot_create_fstab() {
     sed -E "s|^${partition}3|${uuid_boot}|" | \
     sed -E "s|/ btrfs|/           btrfs|" | \
     sed -E "s|/home btrfs|/home       btrfs|" | \
+    sed -E "s|/boot ext4|/boot       ext4 |" | \
     sed -E "s|/@ 0 0|/           0 0|" | \
     sed -E "s|/@home 0 0|/home       0 0|" > /etc/fstab
   # debugging
