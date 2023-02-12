@@ -29,6 +29,7 @@ EOD
 
   apt update
   apt upgrade -y
+  ##XXX local firmware=$(apt search firmware | grep -E "^firmware-" | cut -d/ -f1 | fgrep -v microbit)
   apt install -y firmware-linux
   update-grub
 }
