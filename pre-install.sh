@@ -154,6 +154,7 @@ function make_partitions() {
   echo "[ make_partitions ]"
   local device="$(cat /dev/shm/device)"
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
+  sgdisk -Z               ${device}
   sgdisk -o               ${device}
   sgdisk -n 1:1MiB:513MiB ${device}
   sgdisk -n 2:0:+16GiB    ${device}
