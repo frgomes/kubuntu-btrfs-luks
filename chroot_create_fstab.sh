@@ -17,6 +17,7 @@ function chroot_create_fstab() {
     sed -E "s|/boot ext4|/boot       ext4 |" | \
     sed -E "s|/@ 0 0|/           0 0|" | \
     sed -E "s|/@home 0 0|/home       0 0|" > /etc/fstab
+  echo "tmpfs /tmp        tmpfs rw,nosuid,nodev 0 0" >> /etc/fstab
   # debugging
   cat /etc/fstab
 }
