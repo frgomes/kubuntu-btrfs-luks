@@ -281,93 +281,94 @@ define_user_password
 
 if [[ ! -f /dev/shm/done_step1 ]] ;then
   make_partitions
-  echo -n "PRESS ENTER"; read -s dummy
+  read -p "Press ENTER"
   make_filesystems
-  echo -n "PRESS ENTER"; read -s dummy
+  read -p "Press ENTER"
   make_btrfs_volumes
-  echo -n "PRESS ENTER"; read -s dummy
+  read -p "Press ENTER"
   mount_volumes
-  echo -n "PRESS ENTER"; read -s dummy
+  read -p "Press ENTER"
   touch /dev/shm/done_step1
 fi
 
 if [[ ! -f /dev/shm/done_step2 ]] ;then
   install_debian
-  echo -n "PRESS ENTER"; read -s dummy
+  read -p "Press ENTER"
   touch /dev/shm/done_step2
 fi
 
 setup_chroot
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 
 deploy_chroot_scripts
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 
 if [[ ! -f /dev/shm/done_step3 ]] ;then
   # chroot /mnt /tmp/chroot/chroot_make_apt_sources.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_install_locales.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_install_kernel.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_create_fstab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_install_grub.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_configure_networking.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_enable_services.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
   # chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
-  # echo -n "PRESS ENTER"; read -s dummy
+  # read -p "Press ENTER"
 
   chroot /mnt /tmp/chroot/chroot_install.sh
+  read -p "Press ENTER"
   touch /dev/shm/done_step3
 fi
 
 # if [[ ! -f /dev/shm/done_step4 ]] ;then
 #   chroot /mnt /tmp/chroot/chroot_kernel_update.sh
-#   echo -n "PRESS ENTER"; read -s dummy
+#   read -p "Press ENTER"
 #   touch /dev/shm/done_step4
 # fi
 
 # if [[ ! -f /dev/shm/done_step5 ]] ;then
 #   chroot /mnt /tmp/chroot/chroot_install_desktops.sh
-#   echo -n "PRESS ENTER"; read -s dummy
+#   read -p "Press ENTER"
 #   chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
-#   echo -n "PRESS ENTER"; read -s dummy
+#   read -p "Press ENTER"
 #   chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
-#   echo -n "PRESS ENTER"; read -s dummy
+#   read -p "Press ENTER"
 #   chroot /mnt /tmp/chroot/chroot_install_utilities.sh
-#   echo -n "PRESS ENTER"; read -s dummy
+#   read -p "Press ENTER"
 #   touch /dev/shm/done_step5
 # fi
 
 ##XXX if [[ ! -f /dev/shm/done_step6 ]] ;then
 ##XXX   chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
-##XXX   echo -n "PRESS ENTER"; read -s dummy
+##XXX   read -p "Press ENTER"
 ##XXX   chroot /mnt /tmp/chroot/chroot_finish_installation.sh
-##XXX   echo -n "PRESS ENTER"; read -s dummy
+##XXX   read -p "Press ENTER"
 ##XXX   touch /dev/shm/done_step6
 ##XXX fi
 
 
 echo "[ Installation completed successfully ]"
-read -p "Please remove the installation media and press ENTER" -s dummy
+read -p "Please remove the installation media and press ENTER"
 reboot now

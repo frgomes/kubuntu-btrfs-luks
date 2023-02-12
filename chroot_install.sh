@@ -209,34 +209,34 @@ function chroot_enable_services() {
 
 
 chroot_make_apt_sources
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_setup_password_root
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_setup_password_root
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_setup_password_user
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_install_locales
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_install_missing_packages
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_install_kernel
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_create_fstab
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_install_grub
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_grub_enable_cryptodisk
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_configure_crypttab
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_configure_initramfs
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_configure_networking
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_install_opensshd
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_uefi_run_grub
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
 chroot_enable_services
-echo -n "PRESS ENTER"; read -s dummy
+read -p "Press ENTER"
