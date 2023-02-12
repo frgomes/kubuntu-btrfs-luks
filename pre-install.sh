@@ -222,6 +222,7 @@ function mount_volumes() {
   echo "[ mount_volumes ]"
   local device="$(cat /dev/shm/device)"
   local partition="${device}"p
+  ##XXX local options=,ssd,noatime,compress=lzo,space_cache=v2,commit=120
   local options=,ssd,noatime,compress=lzo,space_cache=v2,commit=120
   # root (btrfs)
   mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
@@ -318,39 +319,38 @@ deploy_chroot_scripts
 echo -n "PRESS ENTER"; read -s dummy
 
 if [[ ! -f /dev/shm/done_step3 ]] ;then
-  # chroot /mnt /tmp/chroot/chroot_make_apt_sources.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_locales.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_network_manager.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_kernel.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_create_fstab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_grub.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_networking.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-
+  chroot /mnt /tmp/chroot/chroot_make_apt_sources.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_locales.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_network_manager.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_kernel.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_fstab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_grub.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_networking.sh
+  echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_enable_services.sh

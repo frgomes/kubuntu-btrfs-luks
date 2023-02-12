@@ -1,4 +1,4 @@
-#!/bin/bash -euxx
+#!/bin/bash -eux
 
 function chroot_kernel_update() {
   echo "[ kernel_update ]"
@@ -28,8 +28,9 @@ EOD
   fi
 
   apt update
-  apt upgrade
+  apt upgrade -y
   apt install -y firmware-linux
+  update-grub
 }
 
 chroot_kernel_update
