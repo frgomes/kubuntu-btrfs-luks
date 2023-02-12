@@ -154,21 +154,19 @@ function make_partitions() {
   echo "[ make_partitions ]"
   local device="$(cat /dev/shm/device)"
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
-  parted -s ${device} -- mklabel gpt
-  parted -s ${device} -- mkpart primary 1MiB 513MiB
-  parted -s ${device} -- mkpart primary 513MiB 16897MiB
-  parted -s ${device} -- mkpart primary 16897MiB 18495MiB
-  parted -s ${device} -- mkpart primary 18495MiB -64KiB
-  parted -s ${device} -- print
+  sgdisk -o ${device}
+  sgdisk -n 1:1MiB:513MiB       ${device}
+  sgdisk -n 2:513MiB:16897MiB   ${device}
+  sgdisk -n 3:16897MiB:18495MiB ${device}
+  sgdisk -n 4:18495MiB:-64KiB   ${device}
+  sgdisk -p ${device}
 
-  parted -s ${device} <<EOD
-mklabel gpt
-mkpart primary 1MiB 513MiB
-mkpart primary 513MiB 16897MiB
-mkpart primary 16897MiB 18495MiB
-mkpart primary 18495MiB -64KiB
-print
-EOD
+  ##XXX parted -s ${device} -- mklabel gpt
+  ##XXX parted -s ${device} -- mkpart primary 1MiB 513MiB
+  ##XXX parted -s ${device} -- mkpart primary 513MiB 16897MiB
+  ##XXX parted -s ${device} -- mkpart primary 16897MiB 18495MiB
+  ##XXX parted -s ${device} -- mkpart primary 18495MiB -64KiB
+  ##XXX parted -s ${device} -- print
 }
 
 function make_luks() {
