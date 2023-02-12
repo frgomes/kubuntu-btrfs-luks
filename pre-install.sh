@@ -176,11 +176,15 @@ function make_partitions() {
   sgdisk -p               ${device}
 }
 
-function make_luks() {
-  echo "[ make_luks ]"
+function make_filesystems() {
+  echo "[ make_filesystems ]"
   local device="$(cat /dev/shm/device)"
   local partition="${device}"p
   local passphrase="$(cat /dev/shm/luks_passphrase)"
+  # efi
+  mkfs.vfat ${partition}1
+  # boot
+  mkfs.ext4 ${partition}3
   # swap
   dd if=/dev/urandom of=${partition}2 count=100 bs=1M
   echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}2
@@ -189,20 +193,6 @@ function make_luks() {
   dd if=/dev/urandom of=${partition}4 count=1000 bs=1M
   echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}4
   echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}4 cryptroot
-  # debugging
-  lsblk
-}
-
-function make_filesystems() {
-  echo "[ make_filesystems ]"
-  local device="$(cat /dev/shm/device)"
-  local partition="${device}"p
-  # efi
-  mkfs.vfat ${partition}1
-  # swap
-  mkswap /dev/mapper/cryptswap
-  # root (btrfs)
-  mkfs.btrfs /dev/mapper/cryptroot
   # debugging
   lsblk
 }
@@ -294,14 +284,12 @@ define_root_password
 define_user_password
 
 if [[ ! -f /dev/shm/done_step1 ]] ;then
-  # make_partitions
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_luks
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_filesystems
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_volumes
-  # echo -n "PRESS ENTER"; read -s dummy
+  make_partitions
+  echo -n "PRESS ENTER"; read -s dummy
+  make_filesystems
+  echo -n "PRESS ENTER"; read -s dummy
+  make_volumes
+  echo -n "PRESS ENTER"; read -s dummy
   mount_volumes
   echo -n "PRESS ENTER"; read -s dummy
   touch /dev/shm/done_step1
