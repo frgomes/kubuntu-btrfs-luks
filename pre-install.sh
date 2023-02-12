@@ -222,7 +222,7 @@ function mount_volumes() {
   echo "[ mount_volumes ]"
   local device="$(cat /dev/shm/device)"
   local partition="${device}"p
-  local options=,ssd,noatime,compress=zstd,space_cache=v2,commit=120
+  local options=,ssd,noatime,compress=lzo,space_cache=v2,commit=120
   # root (btrfs)
   mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
   mkdir -p /mnt/home /mnt/.snapshots
@@ -235,28 +235,6 @@ function mount_volumes() {
   swapon /dev/mapper/cryptswap
   # debugging
   lsblk
-}
-
-function update_sources() {
-  echo "[ update_sources ]"
-  local release="$(cat /dev/shm/release)"
-  local mirror="$(cat /dev/shm/mirror)"
-  local hwarch="$(cat /dev/shm/hwarch)"
-  cat <<EOD > /mnt/etc/apt/sources.list
-deb     http://${mirror}/debian ${release} main contrib non-free
-deb-src http://${mirror}/debian ${release} main contrib non-free
-deb     http://${mirror}/debian-security/ ${release}-security main contrib non-free
-deb-src http://${mirror}/debian-security/ ${release}-security main contrib non-free
-deb     http://${mirror}/debian ${release}-updates main contrib non-free
-deb-src http://${mirror}/debian ${release}-updates main contrib non-free
-
-### backports
-# deb     http://${mirror}/debian ${release}-backports main contrib non-free
-# deb-src http://${mirror}/debian ${release}-backports main contrib non-free
-EOD
-
-  # debugging
-  cat /mnt/etc/apt/sources.list
 }
 
 function install_debian() {
@@ -328,8 +306,6 @@ fi
 
 
 if [[ ! -f /dev/shm/done_step2 ]] ;then
-  update_sources
-  echo -n "PRESS ENTER"; read -s dummy
   install_debian
   echo -n "PRESS ENTER"; read -s dummy
   touch /dev/shm/done_step2
@@ -342,6 +318,9 @@ deploy_chroot_scripts
 echo -n "PRESS ENTER"; read -s dummy
 
 if [[ ! -f /dev/shm/done_step3 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_make_apt_sources.sh
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
