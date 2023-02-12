@@ -330,42 +330,48 @@ echo -n "PRESS ENTER"; read -s dummy
 deploy_chroot_scripts
 echo -n "PRESS ENTER"; read -s dummy
 
-if [[ ! -f /dev/shm/done_step2 ]] ;then
-  # chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_locales.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_kernel.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_create_fstab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_install_grub.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_configure_networking.sh
-  echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
-  echo -n "PRESS ENTER"; read -s dummy
-  touch /dev/shm/done_step2
-fi
+# if [[ ! -f /dev/shm/done_step2 ]] ;then
+#   chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_locales.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_kernel.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_create_fstab.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_grub.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_configure_networking.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_enable_services.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   touch /dev/shm/done_step2
+# fi
+
+echo -n "PRESS ENTER >>>>>>>>>>>>>>>>>>>>>>>>>> "; read -s dummy
+chroot /mnt /tmp/chroot/chroot_finish_installation.sh
+echo -n "PRESS ENTER"; read -s dummy
+
+
+
 
 if [[ ! -f /dev/shm/done_step3 ]] ;then
-  chroot /mnt /tmp/chroot/chroot_enable_services.sh
-  echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
   chroot /mnt /tmp/chroot/chroot_install_desktops.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
@@ -376,11 +382,17 @@ if [[ ! -f /dev/shm/done_step3 ]] ;then
   touch /dev/shm/done_step3
 fi
 
-# echo -n "PRESS ENTER"; read -s dummy
-# ##FIXME:  chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
-# ##FIXME:  echo -n "PRESS ENTER"; read -s dummy
-#
-# ##FIXME:chroot /mnt /tmp/chroot/chroot_finish_installation.sh
-# ##FIXME:echo -n "PRESS ENTER"; read -s dummy
+if [[ ! -f /dev/shm/done_step4 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
+  echo -n "PRESS ENTER"; read -s dummy
+
+
+  touch /dev/shm/done_step4
+fi
+
+
+
 
 umount_and_reboot
