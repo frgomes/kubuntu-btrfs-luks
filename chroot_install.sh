@@ -136,8 +136,8 @@ function chroot_configure_crypttab() {
   local passphrase=$(cat /dev/shm/luks_passphrase)
   dd bs=1 count=512 if=/dev/urandom of=/boot/volume-swap.key
   dd bs=1 count=512 if=/dev/urandom of=/boot/volume-root.key
-  echo -n "${passphrase}" | cryptsetup luksAddKey --key-file=- ${partition}4 /boot/volume-root.key
-  echo -n "${passphrase}" | cryptsetup luksAddKey --key-file=- ${partition}2 /boot/volume-swap.key
+  echo -n "${passphrase}" | cryptsetup luksAddKey -d - ${partition}4 /boot/volume-root.key
+  echo -n "${passphrase}" | cryptsetup luksAddKey -d - ${partition}2 /boot/volume-swap.key
   chmod 000 /boot/volume-root.key
   chmod 000 /boot/volume-swap.key
   chmod -R g-rwx,o-rwx /boot

@@ -189,14 +189,15 @@ function make_filesystems() {
   mkfs.ext4 ${partition}3
   # swap
   dd if=/dev/urandom of=${partition}2 count=10 bs=1M
-  echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}2
-  echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}2 cryptswap
+  echo -n "${passphrase}" | cryptsetup luksFormat -d - --type=luks2 ${partition}2
+  echo -n "${passphrase}" | cryptsetup luksOpen   -d -              ${partition}2 cryptswap
   mkswap /dev/mapper/cryptswap
   # root (btrfs)
   dd if=/dev/urandom of=${partition}4 count=10 bs=1M
-  echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}4
-  echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}4 cryptroot
+  echo -n "${passphrase}" | cryptsetup luksFormat -d - --type=luks2 ${partition}4
+  echo -n "${passphrase}" | cryptsetup luksOpen   -d -              ${partition}4 cryptroot
   mkfs.btrfs /dev/mapper/cryptroot
+
   # debugging
   lsblk
 }
