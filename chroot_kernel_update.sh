@@ -3,12 +3,13 @@
 function chroot_kernel_update() {
   echo "[ kernel_update ]"
   local hwarch="$(cat /dev/shm/hwarch)"
+  local mirror="$(cat /dev/shm/mirror)"
   if ! grep unstable /etc/apt/sources.list > /dev/null ;then
      cat <<EOD >> /etc/apt/sources.list
 
 ### unstable
-deb     http://deb.debian.org/debian unstable main contrib non-free
-deb-src http://deb.debian.org/debian unstable main contrib non-free
+deb     http://${mirror}/debian unstable main contrib non-free
+deb-src http://${mirror}/debian unstable main contrib non-free
 EOD
 
   cat <<EOD > /etc/apt/preferences

@@ -246,20 +246,19 @@ function install_debian() {
 function update_sources() {
   echo "[ update_sources ]"
   local release="$(cat /dev/shm/release)"
+  local mirror="$(cat /dev/shm/mirror)"
   local hwarch="$(cat /dev/shm/hwarch)"
   cat <<EOD > /mnt/etc/apt/sources.list
-deb     http://deb.debian.org/debian ${release} main contrib non-free
-deb-src http://deb.debian.org/debian ${release} main contrib non-free
-
-deb     http://deb.debian.org/debian-security/ ${release}-security main contrib non-free
-deb-src http://deb.debian.org/debian-security/ ${release}-security main contrib non-free
-
-deb     http://deb.debian.org/debian ${release}-updates main contrib non-free
-deb-src http://deb.debian.org/debian ${release}-updates main contrib non-free
+deb     http://${mirror}/debian ${release} main contrib non-free
+deb-src http://${mirror}/debian ${release} main contrib non-free
+deb     http://${mirror}/debian-security/ ${release}-security main contrib non-free
+deb-src http://${mirror}/debian-security/ ${release}-security main contrib non-free
+deb     http://${mirror}/debian ${release}-updates main contrib non-free
+deb-src http://${mirror}/debian ${release}-updates main contrib non-free
 
 ### backports
-# deb     http://deb.debian.org/debian ${release}-backports main contrib non-free
-# deb-src http://deb.debian.org/debian ${release}-backports main contrib non-free
+# deb     http://${mirror}/debian ${release}-backports main contrib non-free
+# deb-src http://${mirror}/debian ${release}-backports main contrib non-free
 EOD
 
   # debugging
