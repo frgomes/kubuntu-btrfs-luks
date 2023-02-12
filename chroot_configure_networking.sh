@@ -8,9 +8,7 @@ function chroot_configure_networking () {
   ##FIXME: review line 127.0.1.1 on /etc/hosts
   echo "${hostname}.${domain}" > /etc/hostname
   sed "s/localhost/${hostname}/g" -i /etc/hosts
-  # configure network-manager
-  systemctl enable NetworkManager dbus
-  update-grub
+  cat /etc/hosts
 }
 
 chroot_configure_networking
