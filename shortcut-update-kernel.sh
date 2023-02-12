@@ -13,17 +13,29 @@ function define_filesystems() {
   lsblk
 }
 
-define_filesystems
-read -p "Press ENTER"
+# define_filesystems
+# read -p "Press ENTER"
+#
+# mount_volumes
+# read -p "Press ENTER"
+#
+# setup_chroot
+# read -p "Press ENTER"
+#
+# deploy_chroot_scripts
+# read -p "Press ENTER"
+#
+# chroot_install_grub
+# read -p "Press ENTER"
+#
+# chroot_kernel_update
+# read -p "Press ENTER"
 
-mount_volumes
-read -p "Press ENTER"
 
-setup_chroot
-read -p "Press ENTER"
 
-deploy_chroot_scripts
-read -p "Press ENTER"
 
-chroot_kernel_update
+
+
+chroot_install_grub
 read -p "Press ENTER"
+update-brub
