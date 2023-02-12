@@ -9,7 +9,6 @@ function chroot_configure_networking () {
   echo "${hostname}.${domain}" > /etc/hostname
   sed "s/localhost/${hostname}/g" -i /etc/hosts
   # configure network-manager
-  apt install -y network-manager
   systemctl enable NetworkManager dbus
   update-grub
 }

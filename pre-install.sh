@@ -330,6 +330,8 @@ if [[ ! -f /dev/shm/done_step3 ]] ;then
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
   echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_network_manager.sh
+  echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_kernel.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_create_fstab.sh
