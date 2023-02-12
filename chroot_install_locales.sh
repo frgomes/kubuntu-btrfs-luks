@@ -20,7 +20,7 @@ XKBOPTIONS="grp:alt_shift_toggle"
 BACKSPACE="guess"
 EOD
 
-  ##XXX dpkg-reconfigure --frontend=noninteractive keyboard-configuration
+  DEBIAN_FRONTEND=noninteractive apt install -y keyboard-configuration
 
   sed -E "s/# ${language}.UTF-8 UTF-8/${language}.UTF-8 UTF-8/" -i /etc/locale.gen
   echo LANG="${language}.UTF-8" > /etc/default/locale
