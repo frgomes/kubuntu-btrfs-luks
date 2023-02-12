@@ -262,24 +262,6 @@ deb-src http://deb.debian.org/debian ${release}-updates main contrib non-free
 ### backports
 # deb     http://deb.debian.org/debian ${release}-backports main contrib non-free
 # deb-src http://deb.debian.org/debian ${release}-backports main contrib non-free
-
-### unstable
-deb     http://deb.debian.org/debian unstable main contrib non-free
-deb-src http://deb.debian.org/debian unstable main contrib non-free
-EOD
-
-  cat <<EOD > /etc/apt/preferences
-Package: *
-Pin: release a=bullseye
-Pin-Priority: 500
-
-Package: linux-image-${hwarch}
-Pin:release a=unstable
-Pin-Priority: 1000
-
-Package: *
-Pin: release a=unstable
-Pin-Priority: 100
 EOD
 
   # debugging
@@ -339,11 +321,16 @@ if [[ ! -f /dev/shm/done_step1 ]] ;then
   echo -n "PRESS ENTER"; read -s dummy
   mount_volumes
   echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step1
+fi
+
+
+if [[ ! -f /dev/shm/done_step2 ]] ;then
   install_debian
   echo -n "PRESS ENTER"; read -s dummy
   update_sources
   echo -n "PRESS ENTER"; read -s dummy
-  touch /dev/shm/done_step1
+  touch /dev/shm/done_step2
 fi
 
 setup_chroot
@@ -352,7 +339,7 @@ echo -n "PRESS ENTER"; read -s dummy
 deploy_chroot_scripts
 echo -n "PRESS ENTER"; read -s dummy
 
-if [[ ! -f /dev/shm/done_step2 ]] ;then
+if [[ ! -f /dev/shm/done_step3 ]] ;then
   chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
@@ -385,16 +372,16 @@ if [[ ! -f /dev/shm/done_step2 ]] ;then
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
   echo -n "PRESS ENTER"; read -s dummy
-  touch /dev/shm/done_step2
-fi
-
-if [[ ! -f /dev/shm/done_step3 ]] ;then
-  chroot /mnt /tmp/chroot/chroot_kernel_update.sh
-  echo -n "PRESS ENTER"; read -s dummy
   touch /dev/shm/done_step3
 fi
 
-# if [[ ! -f /dev/shm/done_step4 ]] ;then
+if [[ ! -f /dev/shm/done_step4 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_kernel_update.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step4
+fi
+
+# if [[ ! -f /dev/shm/done_step5 ]] ;then
 #   chroot /mnt /tmp/chroot/chroot_install_desktops.sh
 #   echo -n "PRESS ENTER"; read -s dummy
 #   chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
@@ -403,15 +390,15 @@ fi
 #   echo -n "PRESS ENTER"; read -s dummy
 #   chroot /mnt /tmp/chroot/chroot_install_utilities.sh
 #   echo -n "PRESS ENTER"; read -s dummy
-#   touch /dev/shm/done_step4
+#   touch /dev/shm/done_step5
 # fi
 
-# if [[ ! -f /dev/shm/done_step5 ]] ;then
+# if [[ ! -f /dev/shm/done_step6 ]] ;then
 #   chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
 #   echo -n "PRESS ENTER"; read -s dummy
 #   chroot /mnt /tmp/chroot/chroot_finish_installation.sh
 #   echo -n "PRESS ENTER"; read -s dummy
-#   touch /dev/shm/done_step5
+#   touch /dev/shm/done_step6
 # fi
 
 
