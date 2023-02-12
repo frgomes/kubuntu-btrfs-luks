@@ -19,7 +19,7 @@ function chroot_enable_services() {
   [[ -d "~${username}/.ssh" ]] || (mkdir -p "~${username}/.ssh"; chmod 700 "~${username}/.ssh" )
   ssh-keygen -b 4096 -t ed25519 -a 5 -f "~${username}/.ssh/id_ed25519" -N"${user_password}"
 
-  ##FIXME: systemctl enable sshd
+  systemctl enable sshd
 }
 
 chroot_enable_services

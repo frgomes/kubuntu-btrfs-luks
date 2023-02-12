@@ -18,7 +18,7 @@ BACKSPACE="guess"
 EOD
 
   apt update
-  apt install -y locales
+  apt install -y locales console-data
 
 # Configure timezone and locale
   echo "${timezone}" > /etc/timezone
