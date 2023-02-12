@@ -174,6 +174,15 @@ function make_partitions() {
   parted -s ${device} -- mkpart primary 16897MiB 18495MiB
   parted -s ${device} -- mkpart primary 18495MiB -64KiB
   parted -s ${device} -- print
+
+  parted -s ${device} <<EOD
+mklabel gpt
+mkpart primary 1MiB 513MiB
+mkpart primary 513MiB 16897MiB
+mkpart primary 16897MiB 18495MiB
+mkpart primary 18495MiB -64KiB
+print
+EOD
 }
 
 function make_luks() {
