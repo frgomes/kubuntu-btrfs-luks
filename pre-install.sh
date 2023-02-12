@@ -373,8 +373,8 @@ function automated_install() {
   # # chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
   # # echo -n "PRESS ENTER"; read -s dummy
 
-  chroot /mnt /tmp/chroot/chroot_install_utilities.sh
-  echo -n "PRESS ENTER"; read -s dummy
+  # chroot /mnt /tmp/chroot/chroot_install_utilities.sh
+  # echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_enable_services.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_finish_installation.sh
