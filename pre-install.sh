@@ -361,12 +361,11 @@ echo -n "PRESS ENTER"; read -s dummy
 #   echo -n "PRESS ENTER"; read -s dummy
 #   chroot /mnt /tmp/chroot/chroot_enable_services.sh
 #   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
+#   echo -n "PRESS ENTER"; read -s dummy
 #   touch /dev/shm/done_step2
 # fi
 
-echo -n "PRESS ENTER >>>>>>>>>>>>>>>>>>>>>>>>>> "; read -s dummy
-chroot /mnt /tmp/chroot/chroot_finish_installation.sh
-echo -n "PRESS ENTER"; read -s dummy
 
 
 
@@ -382,17 +381,13 @@ if [[ ! -f /dev/shm/done_step3 ]] ;then
   touch /dev/shm/done_step3
 fi
 
-if [[ ! -f /dev/shm/done_step4 ]] ;then
-  chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
-  echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
-  echo -n "PRESS ENTER"; read -s dummy
-
-
-  touch /dev/shm/done_step4
-fi
-
-
+# if [[ ! -f /dev/shm/done_step4 ]] ;then
+#   chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_finish_installation.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   touch /dev/shm/done_step4
+# fi
 
 
 umount_and_reboot
