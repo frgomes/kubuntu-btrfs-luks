@@ -2,7 +2,7 @@
 
 function chroot_configure_initramfs_tools() {
   echo "[ configure_initramfs_tools ]"
-  cat <<EOD
+  cat <<EOD >> /etc/initramfs-tools/initramfs.conf
 UMASK=0077
 COMPRESS=gzip
 EOD
