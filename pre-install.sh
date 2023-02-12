@@ -319,6 +319,7 @@ echo -n "PRESS ENTER"; read -s dummy
 
 if [[ ! -f /dev/shm/done_step3 ]] ;then
   chroot /mnt /tmp/chroot/chroot_make_apt_sources.sh
+  echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
