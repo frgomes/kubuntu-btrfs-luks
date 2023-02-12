@@ -235,14 +235,12 @@ function mount_volumes() {
 function install_debian() {
   echo "[ install_debian ]"
   local release="$(cat /dev/shm/release)"
+  local mirror="$(cat /dev/shm/mirror)"
   apt update
   apt install -y debootstrap
   ##FIXME: retry on network errors
-  debootstrap --download-only ${release} /mnt
-  debootstrap --download-only ${release} /mnt
-  debootstrap --download-only ${release} /mnt
-  debootstrap --download-only ${release} /mnt
-  debootstrap ${release} /mnt
+  debootstrap --download-only ${release} /mnt ${mirror}
+  debootstrap ${release} /mnt ${mirror}
 }
 
 function update_sources() {

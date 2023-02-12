@@ -28,6 +28,7 @@ EOD
 
   apt update
   apt upgrade
+  apt install -y firmware-linux
 }
 
 chroot_kernel_update
