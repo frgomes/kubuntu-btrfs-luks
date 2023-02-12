@@ -15,7 +15,7 @@ function chroot_create_fstab() {
     sed -E "s|/ btrfs|/           btrfs|" | \
     sed -E "s|/home btrfs|/home       btrfs|" | \
     sed -E "s|/@ 0 0|/           0 0|" | \
-    sed -E "s|/@home 0 0|/home       0 0|" | > /etc/fstab
+    sed -E "s|/@home 0 0|/home       0 0|" > /etc/fstab
   # debugging
   cat /etc/fstab
 }
