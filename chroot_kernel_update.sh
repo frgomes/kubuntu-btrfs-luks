@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -euxx
 
 function chroot_kernel_update() {
   echo "[ kernel_update ]"

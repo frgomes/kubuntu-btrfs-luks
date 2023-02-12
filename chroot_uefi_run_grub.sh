@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -euxx
 
 function chroot_uefi_run_grub() {
   echo "[ uefi_run_grub ]"

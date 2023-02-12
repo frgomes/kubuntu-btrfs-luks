@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_grub_enable_cryptodisk() {
   echo "[ grub_enable_cryptodisk ]"

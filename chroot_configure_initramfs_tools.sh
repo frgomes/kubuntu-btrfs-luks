@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_configure_initramfs_tools() {
   echo "[ configure_initramfs_tools ]"

@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_finish_installation() {
   echo "[ finish_installation ]"

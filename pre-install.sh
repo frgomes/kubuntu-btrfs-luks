@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function define_arch() {
   ##FIXME: implement this properly

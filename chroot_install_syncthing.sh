@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_install_syncthing() {
   echo "[ install_syncthing ]"

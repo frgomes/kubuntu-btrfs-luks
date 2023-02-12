@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_setup_password_user() {
   echo "[ setup_password_user ]"

@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_configure_crypttab() {
   echo "[ configure_crypttab ]"

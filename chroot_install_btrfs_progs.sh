@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_install_btrfs_progs() {
   echo "[ install_btrfs_progs ]"

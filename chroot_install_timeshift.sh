@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_install_timeshift() {
   echo "[ install_timeshift ]"

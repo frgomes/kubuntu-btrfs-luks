@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -eux
 
 function chroot_create_fstab() {
   echo "[ create_fstab ]"
