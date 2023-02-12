@@ -314,23 +314,23 @@ define_luks_passphrase
 define_root_password
 define_user_password
 
-if [[ ! -f /dev/shm/done_step1 ]] ;then
-  # make_partitions
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_luks
-  # echo -n "PRESS ENTER"; read -s dummy
-  make_filesystems
-  echo -n "PRESS ENTER"; read -s dummy
-  make_volumes
-  echo -n "PRESS ENTER"; read -s dummy
-  mount_volumes
-  echo -n "PRESS ENTER"; read -s dummy
-  install_debian
-  echo -n "PRESS ENTER"; read -s dummy
-  update_sources
-  echo -n "PRESS ENTER"; read -s dummy
-  touch /dev/shm/done_step1
-fi
+# if [[ ! -f /dev/shm/done_step1 ]] ;then
+#   make_partitions
+#   echo -n "PRESS ENTER"; read -s dummy
+#   make_luks
+#   echo -n "PRESS ENTER"; read -s dummy
+#   make_filesystems
+#   echo -n "PRESS ENTER"; read -s dummy
+#   make_volumes
+#   echo -n "PRESS ENTER"; read -s dummy
+#   mount_volumes
+#   echo -n "PRESS ENTER"; read -s dummy
+#   install_debian
+#   echo -n "PRESS ENTER"; read -s dummy
+#   update_sources
+#   echo -n "PRESS ENTER"; read -s dummy
+#   touch /dev/shm/done_step1
+# fi
 
 setup_chroot
 echo -n "PRESS ENTER"; read -s dummy
@@ -355,9 +355,9 @@ if [[ ! -f /dev/shm/done_step2 ]] ;then
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
   echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
-  echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
   echo -n "PRESS ENTER"; read -s dummy
