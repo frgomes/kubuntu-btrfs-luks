@@ -186,7 +186,7 @@ function make_luks() {
   echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}2
   echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}2 cryptswap
   # root (btrfs)
-  dd if=/dev/urandom of=${partition}2 count=1000 bs=1M
+  dd if=/dev/urandom of=${partition}4 count=1000 bs=1M
   echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}4
   echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}4 cryptroot
   # debugging
