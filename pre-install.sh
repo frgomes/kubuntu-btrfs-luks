@@ -182,28 +182,32 @@ function make_filesystems() {
   local partition="${device}"p
   local passphrase="$(cat /dev/shm/luks_passphrase)"
   # efi
+  dd if=/dev/urandom of=${partition}1 count=10 bs=1M
   mkfs.vfat ${partition}1
   # boot
+  dd if=/dev/urandom of=${partition}3 count=10 bs=1M
   mkfs.ext4 ${partition}3
   # swap
-  dd if=/dev/urandom of=${partition}2 count=100 bs=1M
+  dd if=/dev/urandom of=${partition}2 count=10 bs=1M
   echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}2
   echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}2 cryptswap
+  mkswap /dev/mapper/cryptswap
   # root (btrfs)
-  dd if=/dev/urandom of=${partition}4 count=1000 bs=1M
+  dd if=/dev/urandom of=${partition}4 count=10 bs=1M
   echo -n "${passphrase}" | cryptsetup luksFormat --key-file=- --type=luks2 ${partition}4
   echo -n "${passphrase}" | cryptsetup luksOpen   --key-file=-              ${partition}4 cryptroot
+  mkfs.btrfs /dev/mapper/cryptroot
   # debugging
   lsblk
 }
 
-function make_volumes() {
-  echo "[ make_volumes ]"
+function make_btrfs_volumes() {
+  echo "[ make_btrfs_volumes ]"
+  if (mount | grep /mnt) ;then umount /mnt ;fi
   mount /dev/mapper/cryptroot /mnt
   btrfs subvolume create /mnt/@
   btrfs subvolume create /mnt/@home
   btrfs subvolume create /mnt/@snapshots
-  umount /mnt
   # debugging
   lsblk
 }
@@ -288,7 +292,7 @@ if [[ ! -f /dev/shm/done_step1 ]] ;then
   echo -n "PRESS ENTER"; read -s dummy
   make_filesystems
   echo -n "PRESS ENTER"; read -s dummy
-  make_volumes
+  make_btrfs_volumes
   echo -n "PRESS ENTER"; read -s dummy
   mount_volumes
   echo -n "PRESS ENTER"; read -s dummy
