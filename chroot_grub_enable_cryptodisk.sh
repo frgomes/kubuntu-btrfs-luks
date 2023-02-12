@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_grub_enable_cryptodisk() {
   echo "[ grub_enable_cryptodisk ]"
@@ -7,8 +7,7 @@ function chroot_grub_enable_cryptodisk() {
   local luks_config=$(blkid | fgrep 'TYPE="crypto_LUKS"' | cut -d' ' -f2 | cut -d= -f2 | sed 's/"//g' | tr '[:lower:]' '[:upper:]' | sed -E 's/^/,rd.luks.uuid=/' | tr -d '
 ')
   local replace="quiet${luks_config},resume=/dev/mapper/cryptswap"
-  echo REPLACE=${replace}
-  sed -E "s/[\"]quiet[\"]/\"${replace}\"/" -i /etc/default/grub
+  sed -E "s:[\"]quiet[\"]:\"${replace}\":" -i /etc/default/grub
   # debugging
   cat /etc/default/grub
 }
