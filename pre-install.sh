@@ -156,9 +156,13 @@ function make_partitions() {
   ##FIXME: allow configuration of swap space. Hardcoded to 16GiB at this point.
   sgdisk -o ${device}
   sgdisk -n 1:1MiB:513MiB       ${device}
-  sgdisk -n 2:513MiB:16897MiB   ${device}
-  sgdisk -n 3:16897MiB:18495MiB ${device}
-  sgdisk -n 4:18495MiB:-64KiB   ${device}
+  sgdisk -c 1:efi               ${device}
+  sgdisk -n 2:0:+16GiB          ${device}
+  sgdisk -c 2:swap              ${device}
+  sgdisk -n 3:0:+2GiB           ${device}
+  sgdisk -c 3:boot              ${device}
+  sgdisk -n 4:0:-64KiB          ${device}
+  sgdisk -c 4:btrfs             ${device}
   sgdisk -p ${device}
 
   ##XXX parted -s ${device} -- mklabel gpt
