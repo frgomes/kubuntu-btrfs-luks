@@ -356,8 +356,8 @@ if [[ ! -f /dev/shm/done_step2 ]] ;then
   # chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
   # echo -n "PRESS ENTER"; read -s dummy
   # chroot /mnt /tmp/chroot/chroot_configure_networking.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
   echo -n "PRESS ENTER"; read -s dummy
   touch /dev/shm/done_step2
 fi
