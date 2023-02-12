@@ -300,95 +300,90 @@ function umount_and_reboot() {
 
 ###  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function automated_install() {
-  define_keyboard
-  define_language
-  define_timezone
-  define_hostname
-  define_domain
-  define_release
-  define_mirror
-  define_device
-  define_luks_passphrase
-  define_root_password
-  define_user_password
+define_keyboard
+define_language
+define_timezone
+define_hostname
+define_domain
+define_release
+define_mirror
+define_device
+define_luks_passphrase
+define_root_password
+define_user_password
 
-  if [[ ! -f /dev/shm/done_step1 ]] ;then
-    make_partitions
-    echo -n "PRESS ENTER"; read -s dummy
-    make_luks
-    echo -n "PRESS ENTER"; read -s dummy
-    make_filesystems
-    echo -n "PRESS ENTER"; read -s dummy
-    make_volumes
-    echo -n "PRESS ENTER"; read -s dummy
-    mount_volumes
-    echo -n "PRESS ENTER"; read -s dummy
-    install_debian
-    echo -n "PRESS ENTER"; read -s dummy
-    update_sources
-    echo -n "PRESS ENTER"; read -s dummy
-    touch /dev/shm/done_step1
-  fi
-
-  setup_chroot
+if [[ ! -f /dev/shm/done_step1 ]] ;then
+  make_partitions
   echo -n "PRESS ENTER"; read -s dummy
-
-  deploy_chroot_scripts
+  make_luks
   echo -n "PRESS ENTER"; read -s dummy
+  make_filesystems
+  echo -n "PRESS ENTER"; read -s dummy
+  make_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  mount_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  install_debian
+  echo -n "PRESS ENTER"; read -s dummy
+  update_sources
+  echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step1
+fi
 
-  if [[ ! -f /dev/shm/done_step2 ]] ;then
-    chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_install_locales.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_install_kernel.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_create_fstab.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_install_grub.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_configure_networking.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    touch /dev/shm/done_step2
-  fi
+setup_chroot
+echo -n "PRESS ENTER"; read -s dummy
 
-  if [[ ! -f /dev/shm/done_step3 ]] ;then
-    chroot /mnt /tmp/chroot/chroot_install_desktops.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
-    echo -n "PRESS ENTER"; read -s dummy
-    chroot /mnt /tmp/chroot/chroot_install_utilities.sh
-    touch /dev/shm/done_step3
-  fi
+deploy_chroot_scripts
+echo -n "PRESS ENTER"; read -s dummy
 
-  # echo -n "PRESS ENTER"; read -s dummy
-  # ##FIXME:  chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
-  # ##FIXME:  echo -n "PRESS ENTER"; read -s dummy
-  # chroot /mnt /tmp/chroot/chroot_enable_services.sh
-  # echo -n "PRESS ENTER"; read -s dummy
-  #
-  # ##FIXME:chroot /mnt /tmp/chroot/chroot_finish_installation.sh
-  # ##FIXME:echo -n "PRESS ENTER"; read -s dummy
+if [[ ! -f /dev/shm/done_step2 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_locales.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_kernel.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_fstab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_grub.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_networking.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step2
+fi
 
-  umount_and_reboot
-}
+if [[ ! -f /dev/shm/done_step3 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_install_desktops.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_utilities.sh
+  touch /dev/shm/done_step3
+fi
 
+# echo -n "PRESS ENTER"; read -s dummy
+# ##FIXME:  chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
+# ##FIXME:  echo -n "PRESS ENTER"; read -s dummy
+# chroot /mnt /tmp/chroot/chroot_enable_services.sh
+# echo -n "PRESS ENTER"; read -s dummy
+#
+# ##FIXME:chroot /mnt /tmp/chroot/chroot_finish_installation.sh
+# ##FIXME:echo -n "PRESS ENTER"; read -s dummy
 
-automated_install
+umount_and_reboot
