@@ -27,8 +27,8 @@ EOD
 # Configure timezone and locale
   echo "${timezone}" > /etc/timezone
   dpkg-reconfigure -f noninteractive tzdata
-  sed -i -e 's/# ${language}.UTF-8 UTF-8/${language}.UTF-8 UTF-8/' /etc/locale.gen
-  echo 'LANG="${language}.UTF-8"' > /etc/default/locale
+  sed -E 's/# ${language}.UTF-8 UTF-8/${language}.UTF-8 UTF-8/' -i /etc/locale.gen
+  echo LANG="${language}.UTF-8" > /etc/default/locale
   dpkg-reconfigure --frontend=noninteractive locales
   update-locale LANG="${language}.UTF-8"
 }
