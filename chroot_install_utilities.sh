@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_install_utilities() {
   echo "[ install_utilities ]"

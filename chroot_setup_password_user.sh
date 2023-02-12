@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_setup_password_user() {
   local fullname=$(cat /dev/shm/user_fullname)

@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_install_kernel() {
   echo "[ install_kernel ]"

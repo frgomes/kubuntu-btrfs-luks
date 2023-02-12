@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_install_printer_and_scanner() {
   echo "[ install_printer_and_scanner ]"

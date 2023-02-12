@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_create_volume_unlock_keys() {
   echo "[ create_volume_unlock_keys ]"

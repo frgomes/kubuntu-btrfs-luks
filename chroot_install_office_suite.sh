@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_install_office_suite() {
   echo "[ install_office_suite ]"

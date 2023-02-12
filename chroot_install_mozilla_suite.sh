@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/bash -eu
 
 function chroot_install_mozilla_suite() {
   echo "[ install_mozilla_suite ]"
