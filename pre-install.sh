@@ -1,5 +1,10 @@
 #!/bin/bash -eu
 
+function define_arch() {
+  ##FIXME: implement this properly
+  echo amd64 > /dev/shm/hwarch
+}
+
 function define_keyboard() {
   echo "[ define_keyboard ]"
   if [[ ! -f /dev/shm/keyboard ]] ;then
@@ -243,6 +248,7 @@ function install_debian() {
 function update_sources() {
   echo "[ update_sources ]"
   local release="$(cat /dev/shm/release)"
+  local hwarch="$(cat /dev/shm/hwarch)"
   cat <<EOD > /mnt/etc/apt/sources.list
 deb     http://deb.debian.org/debian ${release} main contrib non-free
 deb-src http://deb.debian.org/debian ${release} main contrib non-free
@@ -258,9 +264,24 @@ deb-src http://deb.debian.org/debian ${release}-updates main contrib non-free
 # deb-src http://deb.debian.org/debian ${release}-backports main contrib non-free
 
 ### unstable
-# deb     http://deb.debian.org/debian/ unstable main
-# deb-src http://deb.debian.org/debian/ unstable main
+deb     http://deb.debian.org/debian unstable main contrib non-free
+deb-src http://deb.debian.org/debian unstable main contrib non-free
 EOD
+
+  cat <<EOD > /etc/apt/preferences
+Package: *
+Pin: release a=bullseye
+Pin-Priority: 500
+
+Package: linux-image-${hwarch}
+Pin:release a=unstable
+Pin-Priority: 1000
+
+Package: *
+Pin: release a=unstable
+Pin-Priority: 100
+EOD
+
   # debugging
   cat /mnt/etc/apt/sources.list
 }
@@ -294,6 +315,7 @@ function umount_and_reboot() {
 
 ###  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+define_arch
 define_keyboard
 define_language
 define_timezone
@@ -306,23 +328,23 @@ define_luks_passphrase
 define_root_password
 define_user_password
 
-# if [[ ! -f /dev/shm/done_step1 ]] ;then
-#   make_partitions
-#   echo -n "PRESS ENTER"; read -s dummy
-#   make_luks
-#   echo -n "PRESS ENTER"; read -s dummy
-#   make_filesystems
-#   echo -n "PRESS ENTER"; read -s dummy
-#   make_volumes
-#   echo -n "PRESS ENTER"; read -s dummy
-#   mount_volumes
-#   echo -n "PRESS ENTER"; read -s dummy
-#   install_debian
-#   echo -n "PRESS ENTER"; read -s dummy
-#   update_sources
-#   echo -n "PRESS ENTER"; read -s dummy
-#   touch /dev/shm/done_step1
-# fi
+if [[ ! -f /dev/shm/done_step1 ]] ;then
+  make_partitions
+  echo -n "PRESS ENTER"; read -s dummy
+  make_luks
+  echo -n "PRESS ENTER"; read -s dummy
+  make_filesystems
+  echo -n "PRESS ENTER"; read -s dummy
+  make_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  mount_volumes
+  echo -n "PRESS ENTER"; read -s dummy
+  install_debian
+  echo -n "PRESS ENTER"; read -s dummy
+  update_sources
+  echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step1
+fi
 
 setup_chroot
 echo -n "PRESS ENTER"; read -s dummy
@@ -330,63 +352,66 @@ echo -n "PRESS ENTER"; read -s dummy
 deploy_chroot_scripts
 echo -n "PRESS ENTER"; read -s dummy
 
-# if [[ ! -f /dev/shm/done_step2 ]] ;then
-#   chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_locales.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_kernel.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_create_fstab.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_grub.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_configure_networking.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_enable_services.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   touch /dev/shm/done_step2
-# fi
-
-
-
-
+if [[ ! -f /dev/shm/done_step2 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_setup_password_root.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_setup_password_user.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_locales.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_btrfs_progs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_kernel.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_fstab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_grub.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_create_volume_unlock_keys.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_crypttab.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_initramfs_tools.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_configure_networking.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_uefi_run_grub.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_enable_services.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_opensshd.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step2
+fi
 
 if [[ ! -f /dev/shm/done_step3 ]] ;then
-  chroot /mnt /tmp/chroot/chroot_install_desktops.sh
+  chroot /mnt /tmp/chroot/chroot_kernel_update.sh
   echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
-  echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
-  echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_install_utilities.sh
   touch /dev/shm/done_step3
 fi
 
 # if [[ ! -f /dev/shm/done_step4 ]] ;then
+#   chroot /mnt /tmp/chroot/chroot_install_desktops.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   chroot /mnt /tmp/chroot/chroot_install_utilities.sh
+#   echo -n "PRESS ENTER"; read -s dummy
+#   touch /dev/shm/done_step4
+# fi
+
+# if [[ ! -f /dev/shm/done_step5 ]] ;then
 #   chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
 #   echo -n "PRESS ENTER"; read -s dummy
 #   chroot /mnt /tmp/chroot/chroot_finish_installation.sh
 #   echo -n "PRESS ENTER"; read -s dummy
-#   touch /dev/shm/done_step4
+#   touch /dev/shm/done_step5
 # fi
 
 
