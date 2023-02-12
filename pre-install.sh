@@ -244,7 +244,6 @@ function install_debian() {
   local mirror="$(cat /dev/shm/mirror)"
   apt update
   apt install -y debootstrap
-  ##FIXME: retry on network errors
   debootstrap --download-only ${release} /mnt ##VIXME: ${mirror}
   debootstrap ${release} /mnt ##FIXME: ${mirror}
 }
