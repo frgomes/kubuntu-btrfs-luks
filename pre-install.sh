@@ -164,7 +164,7 @@ function make_partitions() {
   sgdisk -c 2:swap        ${device}
   sgdisk -c 3:boot        ${device}
   sgdisk -c 4:btrfs       ${device}
-  sgdisk -t 1:0f00        ${device}
+  sgdisk -t 1:ef00        ${device}
   sgdisk -t 2:8200        ${device}
   sgdisk -t 3:8300        ${device}
   sgdisk -t 4:8300        ${device}
