@@ -225,7 +225,7 @@ function mount_volumes() {
   ##XXX local options=,ssd,noatime,compress=lzo,space_cache=v2,commit=120
   local options=,ssd,noatime,compress=lzo,space_cache=v2,commit=120
   # root (btrfs)
-  umount /mnt
+  if (mount | grep /mnt) ;then umount /mnt ;fi
   mount -t btrfs -o ${options},subvol=@          /dev/mapper/cryptroot /mnt
   mkdir -p /mnt/home /mnt/.snapshots
   mount -t btrfs -o ${options},subvol=@home      /dev/mapper/cryptroot /mnt/home
@@ -294,14 +294,14 @@ define_root_password
 define_user_password
 
 if [[ ! -f /dev/shm/done_step1 ]] ;then
-  make_partitions
-  echo -n "PRESS ENTER"; read -s dummy
-  make_luks
-  echo -n "PRESS ENTER"; read -s dummy
-  make_filesystems
-  echo -n "PRESS ENTER"; read -s dummy
-  make_volumes
-  echo -n "PRESS ENTER"; read -s dummy
+  # make_partitions
+  # echo -n "PRESS ENTER"; read -s dummy
+  # make_luks
+  # echo -n "PRESS ENTER"; read -s dummy
+  # make_filesystems
+  # echo -n "PRESS ENTER"; read -s dummy
+  # make_volumes
+  # echo -n "PRESS ENTER"; read -s dummy
   mount_volumes
   echo -n "PRESS ENTER"; read -s dummy
   touch /dev/shm/done_step1
