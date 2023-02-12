@@ -288,12 +288,12 @@ define_root_password
 define_user_password
 
 if [[ ! -f /dev/shm/done_step1 ]] ;then
-  # make_partitions
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_filesystems
-  # echo -n "PRESS ENTER"; read -s dummy
-  # make_btrfs_volumes
-  # echo -n "PRESS ENTER"; read -s dummy
+  make_partitions
+  echo -n "PRESS ENTER"; read -s dummy
+  make_filesystems
+  echo -n "PRESS ENTER"; read -s dummy
+  make_btrfs_volumes
+  echo -n "PRESS ENTER"; read -s dummy
   mount_volumes
   echo -n "PRESS ENTER"; read -s dummy
   touch /dev/shm/done_step1
@@ -329,7 +329,7 @@ if [[ ! -f /dev/shm/done_step3 ]] ;then
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_create_fstab.sh
   echo -n "PRESS ENTER"; read -s dummy
-  chroot /mnt /tmp/chroot/chroot_install_grub.sh
+   chroot /mnt /tmp/chroot/chroot_install_grub.sh
   echo -n "PRESS ENTER"; read -s dummy
   chroot /mnt /tmp/chroot/chroot_grub_enable_cryptodisk.sh
   echo -n "PRESS ENTER"; read -s dummy
@@ -358,25 +358,25 @@ if [[ ! -f /dev/shm/done_step4 ]] ;then
   touch /dev/shm/done_step4
 fi
 
-# if [[ ! -f /dev/shm/done_step5 ]] ;then
-#   chroot /mnt /tmp/chroot/chroot_install_desktops.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_install_utilities.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   touch /dev/shm/done_step5
-# fi
+if [[ ! -f /dev/shm/done_step5 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_install_desktops.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_mozilla_suite.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_office_suite.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_install_utilities.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step5
+fi
 
-# if [[ ! -f /dev/shm/done_step6 ]] ;then
-#   chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   chroot /mnt /tmp/chroot/chroot_finish_installation.sh
-#   echo -n "PRESS ENTER"; read -s dummy
-#   touch /dev/shm/done_step6
-# fi
+if [[ ! -f /dev/shm/done_step6 ]] ;then
+  chroot /mnt /tmp/chroot/chroot_install_printer_and_scanner.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  chroot /mnt /tmp/chroot/chroot_finish_installation.sh
+  echo -n "PRESS ENTER"; read -s dummy
+  touch /dev/shm/done_step6
+fi
 
 
 umount_and_reboot

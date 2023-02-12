@@ -2,9 +2,9 @@
 
 function chroot_configure_initramfs_tools() {
   echo "[ configure_initramfs_tools ]"
+  ##FIXME: maybe COMPRESS=zstd
   cat <<EOD >> /etc/initramfs-tools/initramfs.conf
 UMASK=0077
-COMPRESS=gzip
 EOD
   cat /etc/initramfs-tools/initramfs.conf
   update-initramfs -u
